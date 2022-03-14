@@ -1,0 +1,6 @@
+A= int(input())
+B, C, D = map(int, input())
+print(A*D)
+print(A*C)
+print(A*B)
+print(A*B*100+A*C*10+A*D)
