@@ -1,8 +1,14 @@
-a, b, c, d, e, f, g, h = map(int, input().split())
-
-if (a > b) and (b > c) and (c > d)and (d> e)and (e> f)and (f > g) and (g>h):
-    print("descending")
-elif (a < b) and (b < c) and (c < d)and (d <e)and (e < f)and (f < g) and (g<h):
+arr= list(map(int, input().split()))
+ret1 = 0
+ret2 = 0
+for i in range(7) :
+    if arr[i+1] - arr[i] == 1 :
+        ret1 +=1
+    elif arr[i]-arr[i+1] == 1:
+        ret2 +=1
+if ret1 ==7 :
     print("ascending")
+elif ret2 == 7 :
+    print("descending")
 else :
     print("mixed")
