@@ -4,18 +4,11 @@ N = int(input())
 arr =[]
 a = ceil(sqrt(M))
 b = floor(sqrt(N+1))
-if (M == N) and ceil(sqrt(M)) == floor(sqrt(N)) :
-    print(M)
-    print(M)
-elif (M==N) and ceil(sqrt(M)) != floor(sqrt(N)) :
+for x in range(1, 101) : #N의 범위가 10000이하이므로 전수를 돌릴 수 있다.
+    if (M <= x**2) and (x**2<=N) :
+        arr.append(x**2)
+if len(arr)==0 :
     print(-1)
 else :
-    for x in range(ceil(sqrt(M)), floor(sqrt(N+1))+1) :
-        if (M <= x**2) and (x**2 <= N) :
-            arr.append(x**2)
-    if arr==[] : # 오류가 빈칸이 있어서min을 못한다고 하면 min 나올 때를 조건문으로 하는 센스를 가지자
-        print(-1)
-    else:
-        #print(arr)
-        print(sum(arr))
-        print(min(arr))
+    print(sum(arr))
+    print(min(arr))
