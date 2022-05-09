@@ -1,14 +1,27 @@
 T = int(input())
-arr = [ input().split() for _ in range(T)]
-for i in range(T):
-    for j in range(i, T):
-        if int(arr[i][3]) < int(arr[j][3]):
-            arr[i],arr[j] = arr[j],arr[i] # 태어난 년도로 정렬한 결과
-        elif int(arr[i][3]) == int(arr[j][3]):
-            if int(arr[i][2]) < int(arr[j][2]):
-                arr[i],arr[j] = arr[j],arr[i] # 태어난 년도 정렬 >
-            elif arr[i][2] == arr[j][2]:
-                if arr[i][1] < arr[j][1]:
-                    arr[i],arr[j]=arr[j],arr[i]
-print(arr[0][0])
-print(arr[T-1][0])
+arr=[ input().split() for _ in range(T)]
+
+ret1 = arr[0] #part1 나이 적은 사람 찾기
+for i in range(1,T):
+    x = arr[i]
+    if int(x[3]) > int(ret1[3]):
+        ret1,x=x,ret1
+    elif int(x[3]) == int(ret1[3]):
+        if int(x[2]) > int(ret1[2]):
+            ret1,x=x,ret1
+        elif int(x[2])==int(ret1[2]):
+            if int(x[1]) > int(ret1[1]):
+                ret1,x=x,ret1
+print(ret1[0])
+ret2 = arr[0] #part1 나이 많은 사람 찾기
+for i in range(1,T):
+    x = arr[i]
+    if int(x[3]) < int(ret2[3]):
+        ret2,x=x,ret2
+    elif int(x[3]) == int(ret2[3]):
+        if int(x[2]) < int(ret2[2]):
+            ret2,x=x,ret2
+        elif int(x[2])==int(ret2[2]):
+            if int(x[1]) < int(ret2[1]):
+                ret2,x=x,ret2
+print(ret2[0])
