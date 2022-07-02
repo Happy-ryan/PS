@@ -12,6 +12,4 @@ dp[9] = 3
 dp[10] = 2
 for i in range(11,1000001):
     dp[i] = min(1+dp[i-5],1+dp[i-2])
-    if dp[i] == 0:
-        print(-1)
 print(dp[n])
