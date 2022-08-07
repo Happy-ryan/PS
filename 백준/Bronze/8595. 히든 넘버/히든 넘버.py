@@ -1,16 +1,15 @@
+import sys
+
+input = sys.stdin.readline
 n = int(input())
 s = input()
 
 cur = 0
 sum = 0
-for i in range(n):
-    if s[i] in "0123456789":
-        cur = cur*10+ int(s[i])
-    else: 
+for x in s:
+    if '0' <= x <= '9':
+        cur = cur * 10 + int(x)
+    else:
         sum += cur
         cur = 0
-
-if s[-1] in "0123456789":
-    print(sum+cur)
-else:
-    print(sum)
+print(sum + cur)
