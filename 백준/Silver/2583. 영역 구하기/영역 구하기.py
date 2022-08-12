@@ -1,6 +1,4 @@
-import sys
-sys.setrecursionlimit(10**4)
-
+#=================================bfs풀이=====================================
 n,m,k = map(int,input().split()) 
 # n-행 / m-열 / k-사각형 수
 adj = [[1 for col in range(m)] for row in range(n)]
@@ -13,7 +11,8 @@ for _ in range(k):
 # 1 = > 직사각형이 없는 곳 : 체크해야하는 부분 : 방문해야하는 곳
 # print(adj)
 # 방문한 곳 체크
-visited=[ [False for col in range(m)] for row in range(n)]
+in_queue = [ [False for col in range(m)] for row in range(n)]
+dist = [[1 for col in range(m)] for row in range(n)]
 # 이동방향
 dr = [-1,1,0,0]
 dc = [0,0,-1,1]
@@ -21,27 +20,32 @@ dc = [0,0,-1,1]
 def adj_check(r,c):
     return 0 <= r <= n-1 and 0 <= c <= m-1
 
-# dfs 시작
-def dfs(r,c):
-    global cnt
-    visited[r][c] = True
-    cnt += 1 #(중요) 방문할 때마다 더하기 
-    for k in range(4):
-        nr = r + dr[k]
-        nc = c + dc[k]
-        if adj_check(nr,nc) and\
-            not visited[nr][nc] and\
-                adj[nr][nc] != 0:
-                dfs(nr,nc)
+from collections import deque
 
 result = []
-for r in range(0,n):
-    for c in range(0,m):
-        if visited[r][c] or adj[r][c] == 0:
+for r in range(n):
+    for c in range(m):
+        if in_queue[r][c] == True:
             continue
-        cnt = 0
-        dfs(r,c)
-        result.append(cnt)
+        elif in_queue[r][c] == False and adj[r][c] == 0:
+            continue
+        else:
+            q = deque([(r,c)])
+            in_queue[r][c] = True
+            cnt = 1
+            # bfs 진입 시작
+            while q:
+                r,c = q.popleft()
+                for k in range(4):
+                    nr = r + dr[k]
+                    nc = c + dc[k]
+                    if adj_check(nr,nc) and\
+                        not in_queue[nr][nc] and\
+                            adj[nr][nc] != 0:
+                            q.append((nr,nc))
+                            in_queue[nr][nc] = True
+                            cnt += 1
+            result.append(cnt)
 result.sort()
 print(len(result))
 print(*result)
