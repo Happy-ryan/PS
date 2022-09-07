@@ -1,5 +1,5 @@
 import sys
-from heapq import heappop,heappush
+from heapq import heappop, heappush
 
 input = sys.stdin.readline
 dr = [-1,1,0,0]
@@ -26,13 +26,12 @@ while True:
         while heap:
             d, cur_r,cur_c = heappop(heap)
 
-            if dist[cur_r][cur_c] != d: continue
 
             for k in range(4):
                 nr = cur_r + dr[k]
                 nc = cur_c + dc[k]
                 if graph_check(nr,nc) and\
-                    dist[nr][nc] == inf:
+                    dist[nr][nc] > d + graph[nr][nc]:
                     dist[nr][nc] = d + graph[nr][nc]
                     heappush(heap,(dist[nr][nc],nr,nc))
 
