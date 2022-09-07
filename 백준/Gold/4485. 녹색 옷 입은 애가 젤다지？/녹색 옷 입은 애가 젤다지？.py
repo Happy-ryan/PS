@@ -25,7 +25,8 @@ while True:
 
         while heap:
             d, cur_r,cur_c = heappop(heap)
-
+          
+            if dist[cur_r][cur_c] != d: continue
 
             for k in range(4):
                 nr = cur_r + dr[k]
