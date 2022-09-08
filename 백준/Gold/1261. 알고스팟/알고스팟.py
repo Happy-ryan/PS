@@ -28,7 +28,7 @@ while heap:
     nr = cur_r + dr[k]
     nc = cur_c + dc[k]
     if check(nr,nc) and\
-      dist[nr][nc] > d + int(graph[nr][nc]):
+      dist[nr][nc] == inf:
       dist[nr][nc] = d + int(graph[nr][nc])
       heappush(heap,(dist[nr][nc],nr,nc))
 
