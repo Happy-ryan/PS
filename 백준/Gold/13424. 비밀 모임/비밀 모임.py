@@ -29,8 +29,8 @@ T = int(input())
 for _ in range(T):
   N,M = map(int,input().split())
   adj = [[]for row in range(N+1)]
-  result_list = []
-
+  inf = int(1e18)
+  res = (inf,0)
   for _ in range(M):
     a,b,c = map(int,input().split())
     adj[a].append((b,c))
@@ -43,7 +43,8 @@ for _ in range(T):
     # print(dijsktra(adj,s))
     for i in range(K):
       result += di[end_list[i]]
-    result_list.append((result,s))
-  result_list.sort()
-  result_list = result_list[::-1]
-  print(result_list[-1][-1])
+  #   result_list.append((result,s))
+  # result_list.sort()
+  # result_list = result_list[::-1]
+    res = min(res,(result,s))
+  print(res[-1])
