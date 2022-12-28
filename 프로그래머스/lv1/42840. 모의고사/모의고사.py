@@ -1,14 +1,3 @@
-def person1(x):
-    check = []
-    for i in range(1, x+1):
-        if i%5 != 0:
-            check.append(i%5)
-        else:
-            check.append(5)
-            
-    return check
-
-
 def solution(answers):
     answer = []
     check1 = [1, 2, 3, 4, 5] *2000
