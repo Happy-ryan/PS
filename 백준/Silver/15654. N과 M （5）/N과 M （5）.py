@@ -7,11 +7,12 @@ visited = []
 
 def dfs(lev):
     if lev == M:
-        print(*visited)
-        
-    for i, num in enumerate(numList):
+        print(*[numList[i] for i in visited])
+        return
+
+    for i in range(0, N):
         if used[i] == 0:
-            visited.append(num)
+            visited.append(i)
             used[i] = 1
             dfs(lev + 1)
             visited.pop()
