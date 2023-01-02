@@ -25,26 +25,12 @@ def dfs(lev, length, target):
         dfs(lev + 1, length, target)
         visited.pop()
 
-if n == 1:
-    cnt = 1
-    res = [1]
-elif n == 2:
-    cnt = 2
-    res = [(1, 1), 2]
-elif n == 3:
-    cnt = 4
-    res = [(1, 1, 1), (1, 2), (2, 1), 3]
-else:
-    for length in range(2, n + 1):
-        dfs(0, length, n)
 
-# print(res)
-# print(cnt)
+
+for length in range(1, n + 1):
+    dfs(0, length, n)
 
 if k - 1 >= cnt:
     print(-1)
 else:
-    if type(res[k-1]) is int:
-        print(res[k-1])
-    else:
-        print('+'.join(list(map(str, res[k-1]))))
+    print('+'.join(list(map(str, res[k-1]))))
