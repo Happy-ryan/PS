@@ -1,8 +1,8 @@
 def f(n, m):
     res = ''
+    conv = "0123456789ABCDEF"
     while n > 0:
         n, mod = divmod(n, m)
-        conv = "0123456789ABCDEF"
         res += str(conv[mod])
     return res[::-1]
 
