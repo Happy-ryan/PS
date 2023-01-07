@@ -1,4 +1,3 @@
-
 from collections import deque 
 
 def solution(n, computers):
@@ -12,6 +11,7 @@ def solution(n, computers):
             else:
                 if computers[r][c] == 1:
                     adj[r].append(c)
+                    adj[c].append(r) # 무방향성
                     
     in_queue = [False for col in range(n)]
     def bfs(x):
