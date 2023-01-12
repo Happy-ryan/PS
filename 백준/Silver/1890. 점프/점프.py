@@ -6,11 +6,11 @@ dp[0][0] = 1
 
 for r in range(0, n):
     for c in range(0, n):
-        for k in range(0, n):
-            if 0 <= r - k and k == board[r - k][c]:
-                dp[r][c] += dp[r - k][c]
-            if 0 <= c - k and k == board[r][c - k]:
-                dp[r][c] += dp[r][c - k]
+        k = board[r][c]
+        if k > 0 and r + k < n:
+            dp[r + k][c] += dp[r][c]
+        if k > 0 and c + k < n:
+            dp[r][c + k] += dp[r][c]
 
 
 print(dp[n - 1][n - 1])
