@@ -9,5 +9,5 @@ def solution(phone_book):
             
     for qs in phone_book:
         if prefix_dict[qs] > 1:
-            answer = False
+            return False
     return answer
