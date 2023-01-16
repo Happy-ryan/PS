@@ -14,10 +14,9 @@ def solution(s):
             if k != ' ':
                 if p % 2 == 0:
                     answer += a[p].upper()
-                    p += 1
                 else:
                     answer += a[p].lower()
-                    p += 1
+                p += 1
             else:
                 answer += ' '
     return answer
