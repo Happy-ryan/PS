@@ -33,7 +33,7 @@ def solution(fees, records):
             dic.pop(num) # 출자 기록 없는 차를 찾기 위해서 출자한 차는 key에서 배제
     if len(dic.keys()) >= 1: # 출차 기록이 없다 > 23 * 60 + 59에 출차 간주
         for k in dic.keys(): # 출차 기록 없는 차에 대해서..
-            res.append((k, dic[k]))
+            res.append((k, dic[k])) # OUT이 없어서 res에 기록되지 않았음
             res.append((k, 23 * 60 + 59))
             
     # 차량넘버에 따른 총 시간 계산
@@ -42,5 +42,5 @@ def solution(fees, records):
         numDict[row[0]] += row[1]
     
     res = totalMoney(fees, numDict)
-    answer = [x[1] for x in res  ]
+    answer = [x[1] for x in res]
     return answer
