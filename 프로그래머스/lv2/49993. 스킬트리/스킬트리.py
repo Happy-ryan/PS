@@ -13,12 +13,8 @@ def solution(skill, skill_trees):
         for i, x in enumerate(skill_tree):
             if x in skill:
                 skill_order += x
-        print(skill_order)
         
-        if len(skill_order) == '':
+        if skill_order == skill[0 : len(skill_order)]:
             answer += 1
-        else:
-            if skill_order in ans:
-                answer += 1
             
     return answer
