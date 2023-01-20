@@ -15,4 +15,4 @@ res = 0
 for i in range(n):
     res += dic[s[i]] * (31 ** i)
 
-print(res)
+print(res % int(1e18))
