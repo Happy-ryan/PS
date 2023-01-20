@@ -5,14 +5,9 @@ input = sys.stdin.readline
 
 n = int(input())
 s = input()
-conv = '0abcdefghijklmnopqrstuvwxyz'
-dic = defaultdict()
-for i, x in enumerate(conv):
-    dic[x] = i  
-
 res = 0
-
+# 아스키 코드 a : 97
 for i in range(n):
-    res += dic[s[i]] * (31 ** i)
+    res += (ord(s[i]) - 96) * (31 ** i)
 
-print(res % int(1e18))
+print(res % 1234567891)
