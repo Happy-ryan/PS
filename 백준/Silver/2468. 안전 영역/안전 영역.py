@@ -1,42 +1,43 @@
-import sys
-sys.setrecursionlimit(10**4)
+from collections import deque
 
 n = int(input())
-adj =[list(map(int,input().split())) for row in range(n)]
-# print(adj)
-num_set=set()
-for i in range(n):
-    for j in range(n):
-        num_set.add(adj[i][j])
-num_list = [0]+list(num_set)
-# print("숫자리스트",num_list) 
+mat = [list(map(int, input().split())) for row in range(n)]
 
-dr = [-1,1,0,0]
-dc = [0,0,-1,1]
-def adj_check(r,c):
-    return 0 <= r <= (n-1) and 0 <= c <= (n-1)
+def bfs(h_limit, n, mat):
 
-def dfs(r,c):
-    visited[r][c] = True
-    for k in range(4):
-        nr = r + dr[k]
-        nc = c + dc[k]
-        if adj_check(nr,nc) and\
-            not visited[nr][nc] and\
-                tmp < adj[nr][nc]:
-                dfs(nr,nc)
+    dr = [-1, 1, 0, 0]
+    dc = [0, 0, -1, 1]
 
-result = set()
-for x in num_list:
-    tmp = x
-    cnt = 0
-    visited=[[False for col in range(n)] for row in range(n)]
+    in_queue = [[False for col in range(n)] for row in range(n)]
+
+    def check(r, c):
+        return 0 <= r < n and 0<= c < n and\
+            not in_queue[r][c] and mat[r][c] > h_limit
+    
+    q = deque([])
+    cnts = []
     for r in range(n):
         for c in range(n):
-            if visited[r][c] or adj[r][c] <= tmp:
+            if in_queue[r][c] or mat[r][c] <= h_limit:
                 continue
-            dfs(r,c)
-            cnt += 1
-    result.add(cnt)
+            q.append((r, c))
+            in_queue[r][c] = True
+            cnt = 0
+            while q:
+                cr, cc = q.popleft()
+                cnt += 1
+                for k in range(4):
+                    nr = cr + dr[k]
+                    nc = cc + dc[k]
+                    if check(nr, nc):
+                        in_queue[nr][nc] = True
+                        q.append((nr, nc))
+            cnts.append(cnt)
+    
+    return len(cnts)
 
-print(max(result))
+ans = 0
+for h in range(101):
+    ans = max(ans, bfs(h, n, mat))
+
+print(ans)
