@@ -1,25 +1,20 @@
 def solution(n, words):
-    answer = []
-    word_set = set()
-    word_set.add(words[0])
-    final = words[0][-1]
-    i = 1 # 번호
-    num, seq = 0, 0
-    for word in words[1:]:
-        i += 1
-        num = i%n 
-        if num == 0:
-            num = n
-        seq = i//(n) + 1
-        if i%n == 0:
-            seq = i//n
-        if final == word[0] and word not in word_set:
-            word_set.add(word)
+    
+    word_set = set() # 중복단어 발생 확인 용도)
+    seq = []
+    for i, word in enumerate(words):
+
+        if len(word_set) == 0: #처음이면
             final = word[-1]
+            word_set.add(word)
+            seq.append((1 + i % n, 1 + (i // n)))
         else:
-            final != word[-1]
-            anwer = [num,seq]
-            return anwer
-    if len(answer) == 0:
-        answer = [0,0]
-    return answer
+            if final == word[0] and word not in word_set:
+                word_set.add(word)
+                final = word[-1]
+                seq.append((1 + i % n, 1 + (i // n))) #(나의 번호, 몇 번째)
+            else:
+                return [1 + i % n, 1 + (i // n)]
+                break
+    if len(seq) == len(words):
+        return [0, 0]
