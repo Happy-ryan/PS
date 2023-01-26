@@ -15,5 +15,5 @@ def g(n,m):
 def solution(n):
     answer = 0
     f1 = f(n, 3)[::-1]
-    answer =g(f1,3)
+    answer = int(f1, 3)
     return answer
