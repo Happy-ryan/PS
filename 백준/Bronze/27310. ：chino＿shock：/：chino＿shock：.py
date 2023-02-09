@@ -1,0 +1,5 @@
+s = input()
+x = len(s)
+y = s.count(':')
+z = s.count('_')
+print( x + y + z * 5)
