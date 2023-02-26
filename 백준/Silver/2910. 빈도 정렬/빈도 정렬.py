@@ -8,5 +8,4 @@ ans = list(dic.items())
 ans.sort( key = lambda x : x[1], reverse= True)
 
 for val, fre in ans:
-    for _ in range(fre):
-        print(val, end = ' ')
+    print(f"{val} " * fre, end = '')
