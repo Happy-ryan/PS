@@ -8,8 +8,9 @@ for i in range(1,n+1):
     dp[i] = arr[i] + dp[i-1]
 
 # 특정 구간의 합 = [구간누적합-구간누적합]빼기로 접근하자!
-def f(a,b):
+def psum(a,b):
     sum = dp[b] - dp[a-1]
     return sum
 for row in brr:
-    print(f(row[0],row[1]))
+    print(psum(row[0],row[1]))
+    
