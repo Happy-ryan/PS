@@ -1,38 +1,49 @@
-import sys
-sys.setrecursionlimit(10**4)
+# https://www.acmicpc.net/problem/1012
+from collections import deque
 
-T = int(input())
-for _ in range(T):
-    n,m,k = map(int,input().split())
-
-    adj = [[0 for col in range(m)] for row in range(n)]
-    for _ in range(k):
-        a,b = map(int,input().split())
-        adj[a][b] = 1
-
-    visited = [[False for col in range(m)] for row in range(n)]
-
-    def adj_check(r, c):
-        return 0 <= r <= n-1 and 0 <= c <= m-1
-
-    dr = [-1,1,0,0]
-    dc = [0,0,-1,1]
-    def dfs(r,c):
-        visited[r][c] = True
-        for k in range(4):
-            nr = r + dr[k]
-            nc = c + dc[k]
-            if adj_check(nr,nc) and \
-                not visited[nr][nc] and \
-                    adj[nr][nc] == 1:
-                    dfs(nr,nc)
-
-    result = 0
-    for r in range(n):
-        for c in range(m):
-            if adj[r][c] == 0 or visited[r][c]:
+def bfs(row, col, board):
+    in_queue = [[False for col in range(col)] for row in range(row)]
+    
+    def check(r, c):
+        return 0<= r < row and 0<= c <col and not in_queue[r][c] and\
+            board[r][c] == 1 
+            
+    dr = [-1, 1, 0, 0]
+    dc = [0, 0, -1, 1]
+    
+    q = deque([])
+    cnts = [] # 연결된 part들이 몇 개의 블록으로 이루어져 있는지 알 수 있는 곳
+    cnt = 0
+    for r in range(row):
+        for c in range(col):
+            if not check(r, c):
                 continue
-            dfs(r,c)
-            result +=1
+            q.append((r, c))
+            in_queue[r][c] = True
+            cnt = 0
+            while q:
+                cnt += 1 # 연결된 것 모두 찾아냄
+                cr, cc = q.popleft()
+                for k in range(4):
+                    nr = cr + dr[k]
+                    nc = cc + dc[k]
+                    if check(nr, nc):
+                        in_queue[nr][nc] = True
+                        q.append((nr, nc))
+            cnts.append(cnt)
+                        
+    return len(cnts)
 
-    print(result)
+def solution(row, col, board):
+    return bfs(row, col, board)
+
+
+t = int(input())
+
+for _ in range(t):
+    col, row, case = map(int, input().split())
+    board = [[0 for _ in range(col)] for _ in range(row)]
+    for _ in range(case):
+        c_, r_ = map(int, input().split()) # 열, 행
+        board[r_][c_] = 1
+    print(solution(row, col, board))
