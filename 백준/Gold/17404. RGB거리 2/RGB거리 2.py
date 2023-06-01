@@ -7,7 +7,7 @@ costs = [list(map(int, input().split())) for row in range(n)]
 
 def solution(costs):
     n = len(costs)
-    inf = int(1e8)
+    inf = int(1e18)
     # 첫 번째 방에 따라서 N번방의 선택도 달라짐!
     first_room = [[costs[0][0], inf, inf],
                 [inf, costs[0][1], inf],
