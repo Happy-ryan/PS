@@ -24,7 +24,9 @@ def solution(n, m, adj):
     parent = [i for i in range(n + 1)]
     sum_val = 0
     cnt = 0
+    # --3. 간선들을 훑으면서 양쪽 정점이 Union될 때(True) >  정점간 연결
     for u, v, cost in adj:
+        # --4. 간선이 (노드 - 1)개 뽑혔을 때, 최소스패닝트리 완성 / 종료
         if cnt == n - 1:
             break
         if union(parent, u, v):
