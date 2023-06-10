@@ -1,31 +1,15 @@
-N, S = map(int, input().split())
-num = list(map(int, input().split()))
-used = [0] * N
-visited = []
-idx = [0]
+# https://www.acmicpc.net/problem/1182
+# 시간복잡도
+# -> 20C1+20C2+...20C19 2^20 = 1000 1000 = 1000000(백만)
+from itertools import combinations
+
+n, s = map(int, input().split())
+arr = list(map(int, input().split()))
+
 cnt = 0
-
-# d 부분집합의 원소의 개수 1 <= d <= N
-def dfs(lev, S, d):
-    global cnt
-    if lev == d:
-        if sum(visited) == S:
-            # print(visited)
+for x in range(1, n + 1):
+    for row in combinations(arr, x):
+        if sum(row) == s:
             cnt += 1
-            return
-        else:
-            return
-    for i in range(idx[-1], N):
-        if used[i] == 0:
-            used[i] = 1
-            visited.append(num[i])
-            idx.append(i)
-            dfs(lev + 1, S, d)
-            used[i] = 0
-            visited.pop()
-            idx.pop()
-
-for d in range(1, N + 1):
-    dfs(0, S, d)
 
 print(cnt)
