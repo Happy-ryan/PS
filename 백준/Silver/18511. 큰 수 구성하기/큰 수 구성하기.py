@@ -1,10 +1,10 @@
 n, k = map(int, input().split())
 nums = list(map(int, input().split()))
 visited = []
-best_num = 0
+
 
 def dfs(level, depth):
-    global best_num
+    best_num = 0
     if level == depth:
         return int(''.join(map(str, visited)))
     for i in range(k):
