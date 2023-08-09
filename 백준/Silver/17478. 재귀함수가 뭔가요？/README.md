@@ -8,7 +8,7 @@
 
 ### 분류
 
-구현(implementation), 재귀(recursion)
+구현, 재귀
 
 ### 문제 설명
 
