@@ -9,9 +9,9 @@ def f(k, r, c):
             board[r + y][c] = '*'
         for y in range(3):
             board[r + y][c + 2] = '*'
-        for x in range(3):
+        for x in range(1, 2):
             board[r][c + x] = '*'
-        for x in range(3):
+        for x in range(1, 2):
             board[r + 2][c + x] = '*'  
         return
     # k = 9 일때 한 변의 길이 9 정사각형을 이루는 작은 정사각형 8개의 한 변의 길이 3 
