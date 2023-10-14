@@ -42,26 +42,26 @@ def diffusion_simulate():
     return result_board
 
 # 공기청정기 대상 행, 열 추출
-def aircleaner_objs(board, up_r, down_r):
+def aircleaner_objs(up_r, down_r):
     ups = deque([])
     for col in range(C):
-        ups.append(board[up_r][col])
+        ups.append(result_board[up_r][col])
     for row in range(up_r - 1, -1, -1):
-        ups.append(board[row][-1])
+        ups.append(result_board[row][-1])
     for col in range(C - 2, -1, -1):
-        ups.append(board[0][col])
+        ups.append(result_board[0][col])
     for row in range(1, up_r):
-        ups.append(board[row][0])
+        ups.append(result_board[row][0])
     
     downs = deque([])
     for col in range(C):
-        downs.append(board[down_r][col])
+        downs.append(result_board[down_r][col])
     for row in range(down_r + 1, R):
-        downs.append(board[row][-1])
+        downs.append(result_board[row][-1])
     for col in range(C - 2, -1, -1):
-        downs.append(board[R - 1][col])
+        downs.append(result_board[R - 1][col])
     for row in range(R - 2, down_r, -1):
-        downs.append(board[row][0])
+        downs.append(result_board[row][0])
         
     return ups, downs
 
@@ -76,49 +76,52 @@ def aircleaner_simulate(ups, downs):
     
     return ups, downs
 
-def final_simulate(board, up_r, down_r, ups, downs):
+def final_simulate(up_r, down_r, ups, downs):
     i = 0
     for col in range(C):
-        board[up_r][col] = ups[i]
+        result_board[up_r][col] = ups[i]
         i += 1
     for row in range(up_r - 1, -1, -1):
-        board[row][-1] = ups[i]
+        result_board[row][-1] = ups[i]
         i += 1
     for col in range(C - 2, -1, -1):
-        board[0][col] = ups[i]
+        result_board[0][col] = ups[i]
         i += 1
     for row in range(1, up_r):
-        board[row][0] = ups[i]
+        result_board[row][0] = ups[i]
         i += 1
     i = 0
     for col in range(C):
-        board[down_r][col] = downs[i]
+        result_board[down_r][col] = downs[i]
         i += 1
     for row in range(down_r + 1, R):
-        board[row][-1] = downs[i]
+        result_board[row][-1] = downs[i]
         i += 1
     for col in range(C - 2, -1, -1):
-        board[R - 1][col] = downs[i]
+        result_board[R - 1][col] = downs[i]
         i += 1
     for row in range(R - 2, down_r, -1):
-        board[row][0] = downs[i]
+        result_board[row][0] = downs[i]
         i += 1
-    return board
+    return result_board
 
+# 공기 청정기 위치 추출
+up_r, down_r = find(board)
 for _ in range(T):
     result_board = diffusion_simulate()
-    up_r, down_r = find(board)
-    ups = aircleaner_objs(result_board, up_r, down_r)[0]
-    downs = aircleaner_objs(result_board, up_r, down_r)[1]
+    # 공기청정기 대상 행, 열 추출
+    ups, downs = aircleaner_objs(up_r, down_r)
+    # 공기청정기 작동 후 공기청정기 대상 행, 열 변화 상태
     ups, downs = aircleaner_simulate(ups, downs)
-    result_board = final_simulate(result_board, up_r, down_r, ups, downs)
+    # 공기청정기 작동 후 변화 상태 board에 반영
+    result_board = final_simulate(up_r, down_r, ups, downs)
     # 기존 board를 대체해야하므로 deepcopy로 배열 복사
     board = deepcopy(result_board)
     
 sum_val = 0
 for row in result_board:
     sum_val += sum(row)
-
+# 공기청정기 -1이 두 번 더해짐. 상쇄해야함.
 sum_val += 2
 
 print(sum_val)
