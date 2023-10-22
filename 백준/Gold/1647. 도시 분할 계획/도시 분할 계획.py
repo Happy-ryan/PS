@@ -25,7 +25,7 @@ def merge(adj, n):
     parent = [i for i in range(n + 1)]
     #
     sum_val = 0
-    for v, u, cost in adj:
+    for v, u, cost in adj[:-1]:
         # if cnt == n - 1:
         #     break
         if group_num == 2:
