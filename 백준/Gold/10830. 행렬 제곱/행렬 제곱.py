@@ -1,5 +1,4 @@
 # https://www.acmicpc.net/problem/10830
-from copy import deepcopy
 
 n, m = map(int, input().split())
 board = [list(map(int, input().split())) for _ in range(n)]
@@ -15,7 +14,7 @@ def matix_dot(board1, board2):
         for j_ in range(j):
             for k_ in range(k):
                 result[i_][j_] += (board1[i_][k_] * board2[k_][j_])%mod
-            
+            result[i_][j_] %= mod
     return result
 
 # 행렬의 제곱
@@ -27,6 +26,7 @@ def matrix_power(board):
         for k in range(n):
             for j in range(n):
                 result[i][j] += (board[i][k] * board[k][j])%mod
+            result[i][j] %= mod
     return result
 
 # 단위행렬
@@ -43,7 +43,5 @@ while m:
     m >>= 1
     board = matrix_power(board)
     
-for i in range(n):
-    for j in range(n):
-        print(ret[i][j] % mod, end=" ")
-    print()
+for row in ret:
+    print(*row)
