@@ -21,11 +21,14 @@ def find(recommendations, times):
     return res[0][0]
         
 for num in nums:
+    # 틀이 다 찬 상태에서 새로 들어온 숫자가 틀에 없이 새로 추천되는 경우
     if len(q) == n and num not in recommendations:
+        # 삭제
         remove_num = find(recommendations, times)
         q.remove(remove_num)
         recommendations.pop(remove_num)
         times.pop(remove_num)
+        # 추가
         q.append(num)
         recommendations[num] = 1
         times[num] = 0
