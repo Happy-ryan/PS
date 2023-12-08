@@ -1,4 +1,4 @@
-# [Bronze II] 빠른 A+B - 15552 
+# [Bronze IV] 빠른 A+B - 15552 
 
 [문제 링크](https://www.acmicpc.net/problem/15552) 
 
@@ -8,7 +8,11 @@
 
 ### 분류
 
-사칙연산(arithmetic), 구현(implementation), 수학(math)
+구현, 사칙연산, 수학
+
+### 제출 일자
+
+2022년 3월 26일 00:48:09
 
 ### 문제 설명
 
