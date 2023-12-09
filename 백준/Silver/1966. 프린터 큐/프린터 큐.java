@@ -14,8 +14,8 @@ public class Main {
 
             StringTokenizer inputPriority = new StringTokenizer(br.readLine());
 
-            Deque<Integer> priorities = new ArrayDeque<>(m);
-            Deque<Integer> documents = new ArrayDeque<>();
+            Deque<Integer> priorities = new ArrayDeque<>(n);
+            Deque<Integer> documents = new ArrayDeque<>(n);
             for (int k = 0; k < n; k++) {
                 priorities.add(Integer.parseInt(inputPriority.nextToken()));
                 documents.add(k);
@@ -25,8 +25,8 @@ public class Main {
     }
 
     private static int printQueue(Deque<Integer> prioritys, Deque<Integer> documents, int m) {
-        List<Integer> answer = new ArrayList<>();
-        while (!documents.isEmpty()) {
+        List<Integer> answer = new ArrayList<>(prioritys.size());
+        while (!prioritys.isEmpty()) {
             int maxPriority = maxPriority(prioritys);
             if (maxPriority == prioritys.getFirst()) {
                 answer.add(documents.pollFirst());
