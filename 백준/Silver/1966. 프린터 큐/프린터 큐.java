@@ -16,34 +16,35 @@ public class Main {
 
             Deque<Integer> priorities = new ArrayDeque<>(n);
             Deque<Integer> documents = new ArrayDeque<>(n);
+            List<Integer> arr = new ArrayList<>();
             for (int k = 0; k < n; k++) {
-                priorities.add(Integer.parseInt(inputPriority.nextToken()));
+                int p = Integer.parseInt(inputPriority.nextToken());
+                priorities.add(p);
                 documents.add(k);
+                arr.add(p);
             }
-            System.out.println(printQueue(priorities, documents, m));
+            System.out.println(printQueue(priorities, documents, arr, m));
         }
     }
 
-    private static int printQueue(Deque<Integer> prioritys, Deque<Integer> documents, int m) {
+    private static int printQueue(Deque<Integer> prioritys,
+                                  Deque<Integer> documents,
+                                  List<Integer> arr,
+                                  int m) {
         List<Integer> answer = new ArrayList<>(prioritys.size());
-        while (!prioritys.isEmpty()) {
-            int maxPriority = maxPriority(prioritys);
+        Collections.sort(arr, Collections.reverseOrder());
+        int idx = 0;
+        while (idx < arr.size()) {
+            int maxPriority = arr.get(idx); // 시간복잡도 1
             if (maxPriority == prioritys.getFirst()) {
                 answer.add(documents.pollFirst());
                 prioritys.pollFirst();
+                idx++;
             } else {
                 prioritys.add(prioritys.pollFirst());
                 documents.add(documents.pollFirst());
             }
         }
         return answer.indexOf(m) + 1;
-    }
-
-    private static int maxPriority(Deque<Integer> prioritys) {
-        int res = 0;
-        for (int pri : prioritys) {
-            res = Math.max(res, pri);
-        }
-        return res;
     }
 }
