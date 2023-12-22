@@ -1,19 +1,16 @@
-
-N = int(input())
-res = []
-for _ in range(N):
-    s, f = map(int,input().split())
-    res.append((s, f))
+# https://www.acmicpc.net/problem/1931
+n = int(input())
+times = [tuple(map(int, input().split())) for _ in range(n)]
 
 
-def greedy(N, res):
-    res.sort( key = lambda x : x[0])
-    res.sort( key = lambda x : x[1])
-    
-    L = [0]
-    for i in range(1, N):
-        if res[L[-1]][1] <= res[i][0]:
-            L.append(i) 
-    return len(L)
+times.sort(key=lambda x: (x[1], x[0]))
 
-print(greedy(N, res))
+cnt = 1
+last_time = times[0][-1]
+
+for start, end in times[1:]:
+    if last_time <= start:
+        last_time = end
+        cnt += 1
+        
+print(cnt)
