@@ -16,22 +16,12 @@ for i in range(n):
 # 이중포문 -> 시간초과
 # 해결할 필요가 있다! dic을 사용해서 누적시키기
 from collections import Counter
-dic = Counter()
+dic = Counter(psum_)
 ans = 0 
-for r in range(n + 1):
-    ans += dic[psum_[r]]
-    dic[psum_[r]] += 1
-    
-    
-print(ans)
+# for r in range(n + 1):
+#     ans += dic[psum_[r]]
+#     dic[psum_[r]] += 1
+for value in dic.values():
+    ans += value * (value - 1) // 2
 
-# 1: [3, 3]
-# 2: [1, 2], [4, 5]
-# 3: [1, 3] [2, 4] [3, 5]
-# 4: -
-# 5: [1, 5]
-# x로 끝나는 경우의 수
-# 2: [1, 2]
-# 3: [3, 3], [1, 3]
-# 4: [2, 4]
-# 5: [4, 5], [1, 5], [3, 5]
+print(ans)
