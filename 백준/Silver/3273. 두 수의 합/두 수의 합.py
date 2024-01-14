@@ -8,18 +8,19 @@ x = int(input())
 def tow_pointer():
     cnt = 0
     l, r = 0, n - 1
+    k = nums[l] + nums[r]
     while l < r:
-        k = nums[l] + nums[r]
-        if k == x:
-            cnt += 1
+        if k <= x:
+            if k == x:
+                cnt += 1
             k -= nums[l]
-            k -= nums[r]
             l += 1
-            r -= 1
+            k += nums[l]
         elif k > x:
+            k -= nums[r]
             r -= 1
-        elif k < x:
-            l += 1
+            k += nums[r]
+
     return cnt
 
 print(tow_pointer())
