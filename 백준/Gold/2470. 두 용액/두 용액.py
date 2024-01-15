@@ -2,51 +2,22 @@ n = int(input())
 nums = list(map(int, input().split()))
 nums.sort()
 
-# target보다 작거나 같은 값 중 가장 큰 값
-def binary_search(idx: int):
-    target = -nums[idx]
-    l, r = idx + 1, n - 1
-    ans = l
-    while l <= r:
-        m = (l + r) // 2
-        if nums[m] <= target:
-            l = m + 1
-            ans = m
-        else:
-            r = m - 1
-    return ans
+def two_pointer():
+    ans = 2000000000
+    position = [0, n - 1]
+    l, r = 0, len(nums) - 1
+    while l < r:
+        sum_val = nums[l] + nums[r]
+        if ans >= abs(sum_val):
+            ans = abs(sum_val)
+            position[0] = l
+            position[1] = r
 
-# target보다 크거나 같은 값 중 가장 작은 값
-def binary_search1(idx: int):
-    target = -nums[idx]
-    l, r = idx + 1, n - 1
-    ans = l
-    while l <= r:
-        m = (l + r) // 2
-        if nums[m] >= target:
-            r = m - 1
-            ans = m
-        else:
-            l =  m + 1
-    return ans
+        if sum_val < 0:
+            l += 1
+        else: 
+            r -= 1
+    
+    return nums[position[0]], nums[position[1]]
 
-def solve(isTrue):
-    pair = 0
-    inf = 1000000000
-    ans = inf * 2 + 1
-    for idx in range(n - 1):
-        if isTrue:
-            k = binary_search1(idx)
-        else:
-            k = binary_search(idx)
-        sum_val = abs(nums[idx] + nums[k])
-        if sum_val <= ans:
-            ans = sum_val
-            pair = (nums[idx], nums[k])
-            
-    return pair
-
-if abs(sum(solve(True))) > abs(sum(solve(False))):
-    print(*solve(False))
-else:
-    print(*solve(True))
+print(*two_pointer())
