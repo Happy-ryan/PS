@@ -7,16 +7,11 @@ bw_board = [[0 for _ in range(m + 1)] for _ in range(n + 1)]
 # 수정이 필요한 부분! 기록
 for idx, row in enumerate(board):
     for i in range(m):
-        if idx % 2 == 0:
-            if i % 2 == 0 and row[i] != 'B':
-                bw_board[idx + 1][i + 1] = 1
-            elif i % 2 != 0 and row[i] != 'W':
-                bw_board[idx + 1][i + 1] = 1
-        else:
-            if i % 2 == 0 and row[i] != 'W':
-                bw_board[idx + 1][i + 1] = 1
-            elif i % 2 != 0 and row[i] != 'B':
-                bw_board[idx + 1][i + 1] = 1
+        if (i + idx) % 2 == 0 and row[i] != 'B':
+            bw_board[idx + 1][i + 1] = 1
+        elif (i + idx) % 2 != 0 and row[i] != 'W':
+            bw_board[idx + 1][i + 1] = 1
+
 # 누적합..
 # (x1, y1) ~ (x2, y2) 구간 내의 합이 곧 수정해야할 체스판을 의미함
 psum = [[0 for _ in range(m + 1)] for _ in range(n + 1)]
