@@ -16,11 +16,10 @@
 n, k = map(int, input().split())
 memos = [input().split() for _ in range(k)]
 
-def rotate(fortune_wheel: list[int], S: int):
+def rotate(fortune_wheel: list[int], S: int) -> list[int]:
     S %= n
-    for _ in range(S):
-        fortune_wheel = [fortune_wheel[-1]] + fortune_wheel[:-1]
-    return fortune_wheel
+    return fortune_wheel[-S:] + fortune_wheel[:-S]
+
 
 fortune_wheel = list(range(1, n + 1))
 # [] 한 이유: 다른 mark가 들어가면 !
