@@ -17,6 +17,7 @@ n, k = map(int, input().split())
 memos = [input().split() for _ in range(k)]
 
 def rotate(fortune_wheel: list[int], S: int):
+    S %= n
     for _ in range(S):
         fortune_wheel = [fortune_wheel[-1]] + fortune_wheel[:-1]
     return fortune_wheel
