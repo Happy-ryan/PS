@@ -1,34 +1,36 @@
-import sys
-from collections import Counter
-
-input = sys.stdin.readline
-
 L, C = map(int, input().split())
-arr = sorted(list(input().split()))
-
+alpabets = list(input().split())
+# 알파벳이 증가하는 순서로..
+alpabets.sort()
+# 최소 1개의 모음 / 최소 2개의 자음
+# 증가하는 순으로
+def check(arr: list[str]):
+    모음, 자음 = 0, 0
+    for x in arr:
+        if x in 'aeiou':
+            모음 += 1
+        else:
+            자음 += 1
+    if 모음 >= 1 and 자음 >=2:
+        return True
+    return False
+# 
+ans = []
 used = [0] * C
-visited = [-1]
-num = []
-
-def dfs(lev):
-
-    if lev == L:
-        if Counter(num)['a'] + Counter(num)['e'] + Counter(num)['i'] + Counter(num)['o'] + Counter(num)['u'] >= 1 and\
-            Counter(num)['b'] + Counter(num)['c'] + Counter(num)['d'] + Counter(num)['f'] + Counter(num)['g'] + Counter(num)['h'] +\
-                Counter(num)['j'] + Counter(num)['k'] + Counter(num)['l'] + Counter(num)['m'] + Counter(num)['n'] + Counter(num)['p'] +\
-                    Counter(num)['q'] + Counter(num)['r'] + Counter(num)['s'] + Counter(num)['t'] + Counter(num)['w'] + Counter(num)['x'] +\
-                        Counter(num)['y'] + Counter(num)['z'] >= 2:
-                        print(''.join(num))
-                        return
+def dfs(level, idx):
+    if level == L:
+        if check(ans):
+            print(''.join(ans))
+        return
     
-    for i in range(visited[-1] + 1, len(arr)):
+    for i in range(idx, C):
         if used[i] == 0:
-            visited.append(i)
             used[i] = 1
-            num.append(arr[i])
-            dfs(lev + 1)
-            num.pop()
+            ans.append(alpabets[i])
+            # 저번에도 i 대신에 idx 넣어서 틀렸는데..또 이 실수?
+            dfs(level + 1, i + 1)
+            ans.pop()
             used[i] = 0
-            visited.pop()
+        
 
-dfs(0)
+dfs(0, 0)
