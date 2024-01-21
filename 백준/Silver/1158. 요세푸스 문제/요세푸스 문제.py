@@ -1,20 +1,29 @@
+# https://www.acmicpc.net/problem/1158
 from collections import deque
-N,K = map(int,input().split())
-q = deque(list(range(1,N+1)))
-result = []
-while len(result) != N:
-    for x in range(K):
-        if x < K-1:
-            cur = q.popleft()
-            q.append(cur)
-        else:
-            cur = q.popleft()
-            result.append(cur)
-s = ''
-for i in range(len(result)):
-    if i == len(result)-1:
-        s += f"{result[i]}"
+
+def rotate():
+    for _ in range(k - 1):
+        e = dq.popleft()
+        dq.append(e)
+    return dq.popleft()
+
+n, k = map(int, input().split())
+dq = deque(range(1, n + 1))
+
+res = '<'
+for i in range(n):
+    e = rotate()
+    if i == n - 1:
+        res += f"{e}>"
     else:
-        s += f"{result[i]},"+' '
-ss = '<'+s+'>'
-print(ss)
+        res += f"{e}, "
+        
+print(res)
+# 1 2 3 4 5 6 7
+# (3) 4 5 6 7 1 2 : k가 3일 때 회전은 2번 발생..
+# (6) 7 1 2 4 5
+# (2) 4 5 7 1
+# (7) 1 4 5
+# (5) 1 4
+# (1) 4
+# (4)
