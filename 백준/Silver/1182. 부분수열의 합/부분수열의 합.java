@@ -1,62 +1,41 @@
-import java.io.*;
 import java.util.*;
 
 public class Main {
-    
-    private static int N, S, cnt;
-    private static int[] used, nums;
-    private static List<Integer> ans;
 
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer inputNS = new StringTokenizer(br.readLine());
+    private static int n, s, cnt;
 
-        N = Integer.parseInt(inputNS.nextToken());
-        S = Integer.parseInt(inputNS.nextToken());
+    private static List<Integer> numbers = new ArrayList<>();
 
-        used = new int[N];
-        nums = new int[N];
-        ans = new ArrayList<>();
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        n = sc.nextInt();
+        s = sc.nextInt();
+
         cnt = 0;
 
-        StringTokenizer input = new StringTokenizer(br.readLine());
-        for (int i = 0; i < N; i++) {
-            nums[i] = Integer.parseInt(input.nextToken());
+        for (int i = 0; i < n; i++) {
+            int num = sc.nextInt();
+            numbers.add(num);
         }
 
-        for (int k = 1; k <= N; k++) {
-            dfs(0, 0, k);
-        }
+        DFS(0, 0);
 
+        if (s == 0) {
+            cnt--;
+        }
         System.out.println(cnt);
+
     }
 
-    private static void dfs(int level, int idx, int k) {
-        if (level == k) {
-            if (sumList(ans) == S) {
+    private static void DFS(int level, int sum) {
+        if (level == n) {
+            if (sum == s) {
                 cnt++;
-                return;
-            } else {
-                return;
             }
+            return;
         }
 
-        for (int i = idx; i < N; i++) {
-            if (used[i] == 0) {
-                used[i] = 1;
-                ans.add(nums[i]);
-                dfs(level + 1, i + 1, k);
-                used[i] = 0;
-                ans.remove(ans.size() - 1);
-            }
-        }
-    }
-
-    private static int sumList(List<Integer> list) {
-        int sum = 0;
-        for (int num : list) {
-            sum += num;
-        }
-        return sum;
+        DFS(level + 1, sum + numbers.get(level));
+        DFS(level + 1, sum);
     }
 }
