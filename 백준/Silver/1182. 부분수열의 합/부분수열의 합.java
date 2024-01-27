@@ -2,7 +2,7 @@ import java.util.*;
 
 public class Main {
 
-    private static int n, s, cnt;
+    private static int n, s;
 
     private static List<Integer> numbers = new ArrayList<>();
 
@@ -11,14 +11,13 @@ public class Main {
         n = sc.nextInt();
         s = sc.nextInt();
 
-        cnt = 0;
 
         for (int i = 0; i < n; i++) {
             int num = sc.nextInt();
             numbers.add(num);
         }
 
-        DFS(0, 0);
+        int cnt = DFS(0, 0);
 
         if (s == 0) {
             cnt--;
@@ -27,15 +26,18 @@ public class Main {
 
     }
 
-    private static void DFS(int level, int sum) {
+    private static int DFS(int level, int sum) {
+        int cnt = 0;
         if (level == n) {
             if (sum == s) {
-                cnt++;
+                return 1;
             }
-            return;
+            return 0;
         }
 
-        DFS(level + 1, sum + numbers.get(level));
-        DFS(level + 1, sum);
+        cnt += DFS(level + 1, sum + numbers.get(level));
+        cnt += DFS(level + 1, sum);
+
+        return  cnt;
     }
 }
