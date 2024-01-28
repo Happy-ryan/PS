@@ -5,7 +5,6 @@ public class Main {
     private static int L, C;
     private static List<String> alpabets;
 
-    private static int[] used;
     private static List<String> ans;
 
     public static void main(String[] args) throws IOException {
@@ -23,7 +22,6 @@ public class Main {
         // 증가하는 순이므로 정렬 필요함(자바 정렬 - Collections.sort(배열)
         Collections.sort(alpabets);
 
-        used = new int[C];
         ans = new ArrayList<>();
         dfs(0, 0);
     } 
@@ -36,16 +34,12 @@ public class Main {
             }
             return;
         }
-
-        for(int i = idx; i < C; i++){
-            if(used[i] == 0){
-                used[i] = 1;
-                ans.add(alpabets.get(i));
-                dfs(level + 1, i + 1);
-                used[i] = 0;
-                ans.remove(ans.size() - 1);
-            }
+        for (int i = idx; i < C; i++) {
+        ans.add(alpabets.get(i));
+        dfs(level + 1, i + 1);
+        ans.remove(ans.size() - 1);
         }
+    
     }
 
         private static boolean check(List<String> ans){
@@ -72,5 +66,5 @@ public class Main {
             sb.append(string);
         }
         System.out.println(sb.toString());
-    }  
+    }
 }
