@@ -32,12 +32,12 @@ public class Main {
             char name = sc.next().charAt(0);
             int score = sc.nextInt();
             // 5퍼센트 미만은 고려 안함.
-            if (score < (double) x * 5 / 100) {
+            if (score * 100 < x * 5) {
                 continue;
             }
             overFivePercentPeople.add(name);
             for (int j = 1; j <= 14; j++) {
-                scoreList.add(new Pair(name, (double) score / j)); // 소수점까지 나오도록!
+                scoreList.add(new Pair(name, (double)(score) / j)); // 소수점까지 나오도록!
             }
         }
         // 상위 14개를 얻기 위해서 점수로 정렬
@@ -51,7 +51,7 @@ public class Main {
         }
 
         for (char name : overFivePercentPeople) {
-            System.out.printf("%s %d\n", name, voteCount[(int) name - 'A']);
+            System.out.printf("%s %d\n", name, voteCount[(int)(name - 'A')]);
 
         }
 
