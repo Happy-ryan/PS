@@ -38,17 +38,11 @@ public class Main {
             return dp[n];
         }
 
-        int ret = 0;
-        boolean isStart = true;
+        int ret = table[n][1];
         for (int i = 1; i < n; i++) {
             if (i + table[i][0] - 1 < n) {
                 ret = Math.max(ret, dpf(i) + table[n][1]);
-                isStart = false;
             }
-        }
-        // 처음 선택한 날 빼고는 상담이 불가능할 때!
-        if (isStart) {
-            return table[n][1];
         }
 
         dp[n] = ret;
