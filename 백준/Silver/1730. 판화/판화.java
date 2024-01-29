@@ -17,11 +17,9 @@ public class Main {
 
         Scanner sc = new Scanner(System.in);
         
-        // Read the size of the board
         n = sc.nextInt();
-        sc.nextLine(); // Consume newline character after reading integer
+        sc.nextLine();
         
-        // Read the commands as a string
         String cmds = sc.nextLine();
         
         upDownBoard = new char[n][n];
@@ -65,7 +63,6 @@ public class Main {
             }
         }
 
-        // Print the final board
         for (int r = 0; r < n; r++) {
             for (int c = 0; c < n; c++) {
                 System.out.print(finalBoard[r][c]);
@@ -73,7 +70,6 @@ public class Main {
             System.out.println();
         }
 
-        // Close the scanner
         sc.close();
     }
 
