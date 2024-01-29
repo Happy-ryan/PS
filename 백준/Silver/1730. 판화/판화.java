@@ -19,7 +19,7 @@ public class Main {
         
         n = sc.nextInt();
         sc.nextLine();
-        
+        // String을 next로 받으면 안 되나?
         String cmds = sc.nextLine();
         
         upDownBoard = new char[n][n];
@@ -70,7 +70,6 @@ public class Main {
             System.out.println();
         }
 
-        sc.close();
     }
 
     private static boolean inRange(int r, int c) {
