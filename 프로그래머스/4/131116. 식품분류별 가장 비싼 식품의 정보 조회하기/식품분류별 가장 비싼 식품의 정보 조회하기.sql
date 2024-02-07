@@ -16,13 +16,12 @@ inner join temp T on (P.CATEGORY = T.CATEGORY and P.PRICE = T.PRICE)
 where P.CATEGORY in ('과자', '국', '김치', '식용유')
 order by P.PRICE desc;
 
-
-SELECT P.CATEGORY, MAX(P.PRICE) AS MAX_PRICE, 
-       SUBSTRING_INDEX(GROUP_CONCAT(P.PRODUCT_NAME ORDER BY P.PRICE DESC), ',', 1)
+# 각 카테고리별 최대값 가져오기
+# subtring_index(group_concat(P.PRODUCT_NAME order by P.PRICE desc), ',', 1)
+select P.CATEGORY, MAX(P.PRICE) as MAX_PRICE, 
+       substring_index(group_concat(P.PRODUCT_NAME ORDER BY P.PRICE DESC), ',', 1)
        AS PRODUCT_NAME
-FROM FOOD_PRODUCT P
-WHERE P.CATEGORY IN ('과자', '국', '김치', '식용유')
-GROUP BY P.CATEGORY
-ORDER BY P.PRICE DESC;
-
-
+from FOOD_PRODUCT P
+where P.CATEGORY in ('과자', '국', '김치', '식용유')
+group by P.CATEGORY
+order by P.PRICE desc;
