@@ -36,10 +36,9 @@ public class Main {
             for (int i = r; i < r + 3; i++) {
                 for (int j = c; j < c + 3; j++) {
                     if (i == r + 1 && j == c + 1) {
-                        board[i][j] = ' ';
-                    } else {
-                        board[i][j] = '*';
-                    }
+                        continue;
+                    } 
+                    board[i][j] = '*';
                 }
             }
             return;
