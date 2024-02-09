@@ -20,7 +20,7 @@ select FLAVOR
 from temp2
 limit 3;
 
-with temp4 as (
+with temp3 as (
     select FLAVOR, sum(TOTAL_ORDER) as TOTAL_ORDER
     from FIRST_HALF
     group by FLAVOR
@@ -31,10 +31,22 @@ with temp4 as (
     from JULY
     group by FLAVOR
 ),
-temp5 as (
+temp4 as (
     select FLAVOR, sum(TOTAL_ORDER) as TOTAL_ORDER
-    from temp4
+    from temp3
     group by FLAVOR
+    order by TOTAL_ORDER desc
+)
+
+select FLAVOR
+from temp4
+limit 3;
+
+with temp5 as (
+    select J.FLAVOR, sum(ifnull(H.TOTAL_ORDER, 0) + J.TOTAL_ORDER) as TOTAL_ORDER
+    from FIRST_HALF H
+    right outer join JULY J on H.SHIPMENT_ID = J.SHIPMENT_ID
+    group by J.FLAVOR
     order by TOTAL_ORDER desc
 )
 
