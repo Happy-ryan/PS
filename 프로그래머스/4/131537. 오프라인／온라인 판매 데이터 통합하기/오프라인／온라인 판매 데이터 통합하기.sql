@@ -4,6 +4,7 @@
 # 판매 날짜, 상품id, 유저id, 판매량
 # 오프라인 user_id 는 null로 표시 > 오프라인 테이블에는 user_id 컬럼 없음 NULL 도입
 # 판매일 오름차순, 상품id 오름차순, 유저id 오름차순
+# join은 사용불가할 것 같다...왜냐하면 오프라인 또는 온라인 판매 데이터 중 사라지는 존재가 발생함.
 with temp as (
     select date_format(SALES_DATE,'%Y-%m-%d') as SALES_DATE,
         PRODUCT_ID,
