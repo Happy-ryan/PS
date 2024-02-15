@@ -3,12 +3,12 @@
 # 대여금액 기준 내림차순 / 기록id 내림차순
 
 with temp as (
-    select H.HISTORY_ID, timestampdiff(day, H.START_DATE, H.END_DATE) + 1 as DAY,
+    select H.HISTORY_ID,
         case
-            when timestampdiff(day, H.START_DATE, H.END_DATE) + 1 >= 90 then '90일 이상'
-            when timestampdiff(day, H.START_DATE, H.END_DATE) + 1 between 30 and 89 then '30일 이상'
-            when timestampdiff(day, H.START_DATE, H.END_DATE) + 1 between 7 and 29 then '7일 이상'
-            else null
+            when timestampdiff(day, H.START_DATE, H.END_DATE) < 7 then null
+            when timestampdiff(day, H.START_DATE, H.END_DATE) < 30 then '7일 이상'
+            when timestampdiff(day, H.START_DATE, H.END_DATE) < 90 then '30일 이상'
+            else '90일 이상'
         end as DURATION_TYPE,
         C.DAILY_FEE * (timestampdiff(day, H.START_DATE, H.END_DATE) + 1) as TOTAL_FEE,
         C.CAR_TYPE
