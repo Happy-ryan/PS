@@ -7,7 +7,7 @@ with temp as (
         when timestampdiff(day, H.START_DATE, H.END_DATE) + 1 >= 90 then '90일 이상'
         when timestampdiff(day, H.START_DATE, H.END_DATE) + 1 between 30 and 89 then '30일 이상'
         when timestampdiff(day, H.START_DATE, H.END_DATE) + 1 between 7 and 29 then '7일 이상'
-        else '7일 이하'
+        else null
         end as DURATION,
         C.DAILY_FEE * (timestampdiff(day, H.START_DATE, H.END_DATE) + 1) as TOTAL_FEE,
         C.CAR_TYPE
@@ -21,4 +21,4 @@ select T.HISTORY_ID,
 from temp T
 left join CAR_RENTAL_COMPANY_DISCOUNT_PLAN P 
         on T.CAR_TYPE = P.CAR_TYPE and T.DURATION = P.DURATION_TYPE
-order by FEE desc, HISTORY_ID desc; 
+order by FEE desc, HISTORY_ID desc;
