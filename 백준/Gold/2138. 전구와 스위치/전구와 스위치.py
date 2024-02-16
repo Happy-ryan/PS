@@ -1,43 +1,30 @@
 n = int(input())
-s1 = list(input())
-s2 = list(input())
+s1 = list(map(int, input()))
+s2 = list(map(int, input()))
 
-orgin = s1.copy()
+for i, x in enumerate(s2):
+    s1[i] ^= x
+# to zero all
+s3 = s1.copy()
+s3[0] ^= 1
+s3[1] ^= 1
 
-def flip(x):
-    return str(int(x)^1)
-
-cnt_first_choose = 0
-cnt_first_no = 0
 inf = int(1e9)
-ans = inf
 
-for i in range(1, n):
-    if s1[i - 1] != s2[i - 1]:
-        cnt_first_no += 1
-        s1[i - 1] = flip(s1[i - 1])
-        s1[i] = flip(s1[i])
-        if i + 1 < n:
-            s1[i + 1] = flip(s1[i + 1])
+def simulate(s1):
+    cnt = 0
+    for i in range(1, n):
+        if s1[i - 1]:
+            cnt += 1
+            s1[i - 1] ^= 1
+            s1[i] ^= 1
+            if i + 1 < n:
+                s1[i + 1] ^= 1
+    if s1[-1]:
+        return inf
+    return cnt
 
-if s1[-1] == s2[-1]:
-    ans = min(ans, cnt_first_no)
-
-s1 = orgin
-s1[0] = flip(s1[0])
-s1[1] = flip(s1[1])
-cnt_first_choose += 1
-for i in range(1, n):
-    if s1[i - 1] != s2[i - 1]:
-        cnt_first_choose += 1
-        s1[i - 1] = flip(s1[i - 1])
-        s1[i] = flip(s1[i])
-        if i + 1 < n:
-            s1[i + 1] = flip(s1[i + 1])
-
-if s1[-1] == s2[-1]:
-    ans = min(ans, cnt_first_choose)
-
+ans = min(simulate(s1), simulate(s3) + 1)
 
 if ans == inf:
     print(-1)
