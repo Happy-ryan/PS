@@ -13,3 +13,15 @@ with temp as (
 
 select ANIMAL_ID, NAME
 from temp;
+
+# 윈도우함수!!
+with temp as (
+    select I.ANIMAL_ID, I.NAME, 
+        row_number() over (order by timestampdiff(day,I.DATETIME, O.DATETIME) desc) as rn
+    from ANIMAL_INS I
+    inner join ANIMAL_OUTS O on I.ANIMAL_ID = O.ANIMAL_ID
+)
+
+select ANIMAL_ID, NAME
+from temp
+where rn = 1 or rn = 2;
