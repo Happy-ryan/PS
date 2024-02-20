@@ -27,3 +27,31 @@ with temp as (
 select *
 from temp
 order by SALES_DATE, PRODUCT_ID, USER_ID;
+
+# 2022년 3월 오프라인/온라인 상품의 판매데이터 판매날짜, 상품id, 유저id, 판매량
+# 오프라인 유저id는 null로 표시
+# 판매일 기준 오름차순 > 상품id 오름차순 > 유저id 오름차수
+
+
+with temp as (
+    select date_format(SALES_DATE, '%Y-%m-%d') as SALES_DATE, PRODUCT_ID, USER_ID, SALES_AMOUNT
+    from ONLINE_SALE
+    where year(SALES_DATE) = 2022 and month(SALES_DATE) = 3
+    
+    union all
+    
+    select date_format(SALES_DATE, '%Y-%m-%d') as SALES_DATE, PRODUCT_ID, null, SALES_AMOUNT
+    from OFFLINE_SALE
+    where year(SALES_DATE) = 2022 and month(SALES_DATE) = 3
+)
+
+select *
+from temp
+order by SALES_DATE asc, PRODUCT_ID	 asc, USER_ID asc;
+
+
+
+
+
+
+
