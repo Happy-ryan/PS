@@ -1,6 +1,5 @@
 -- 코드를 입력하세요
 # 식품별 가격 제일 비싼거
-# 식품별 비싼거 - group by + 집계함수
 # 식품분류 -  '과자', '국', '김치', '식용유' - where
 # 식품 가격 기준 내림차순
 with temp as (
@@ -36,3 +35,19 @@ where (CATEGORY, PRICE) in (
     group by CATEGORY
 )
 order by PRICE desc;
+
+# 식품분류별로 가격이 제일 비싼 식품의 정보 얻기
+# 식품분류, 과자, 국, 김치, 식용유인경우만 출력!
+# 식품 가격 기준 내림차순
+
+with temp as (
+    select CATEGORY,PRODUCT_ID,PRODUCT_NAME,PRICE,
+        row_number() over(partition by CATEGORY order by PRICE desc) as rn
+    from FOOD_PRODUCT
+    where CATEGORY regexp '과자|국|김치|식용유'
+)
+
+select CATEGORY, PRICE as MAX_PRICE, PRODUCT_NAME
+from temp T
+where T.rn = 1
+order by MAX_PRICE desc;
