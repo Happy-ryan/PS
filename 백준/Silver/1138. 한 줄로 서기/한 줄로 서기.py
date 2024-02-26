@@ -1,29 +1,28 @@
 n = int(input())
 nums = list(map(int, input().split()))
 
-# 내 앞의 0의 개수!!
-def solution(n, nums):
-    # 작은 값부터 채우기때문에 내 왼쪽의 0의 개수가 곧 나보다 큰 수를 의미하며, 곧 num을 의미한다.
-    memo = [0] * (n)
-    for idx, num in enumerate(nums):
-        s = 0
-        cnt = 0 # 0의 개수
-        #print(f"idx: {idx + 1}, num: {num}, cnt: {cnt}")
-        while s < n:
-            if cnt == num:
-                if memo[s] == 0:
-                    memo[s] = idx + 1
-                    break
-                else:
-                    s += 1
-            
-            elif memo[s] == 0:
-                cnt += 1
-                s += 1
-            else:
-                s += 1
-        #print(f"memo: {memo}")
-        #print("=")
-    return memo
+def solution_2(n, nums):
+    # 내가 숫자를 넣으면 내 오른쪽 값들은 0을 하나씩 잃어버림
+    # 나의 인덱스(idx) + 1 ~ n, 즉 내 오른쪽에서 0을 하나씩 제외할 것
+    
+    memo = list(range(n))
+    check = [0] * n
+    
+    answer = [0] * n
+    for high, num in enumerate(nums):
+        
+        for i in range(n):
+            if memo[i] == num and check[i] == 0:
+                idx = i
+                
+        answer[idx] = high + 1
+        check[idx] = 1
+        
+        # 0을 제외하는 작업!
+        for x in range(idx + 1, n):
+            if check[x] == 0:
+                memo[x] -= 1
+                
+    return answer
 
-print(*solution(n, nums))
+print(*solution_2(n, nums))
