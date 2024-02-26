@@ -40,3 +40,21 @@ select T1.REST_ID, T1.REST_NAME, T1.FOOD_TYPE, T1.FAVORITES, T1.ADDRESS, T2.SCOR
 from temp T1
 inner join temp2 T2 on T1.REST_ID = T2.REST_ID
 order by T2.SCORE desc, T1.FAVORITES	desc;
+
+
+# 서울 / 평균리뷰점수 / 세번째 반올림 / 평균 내림차순 / 즐겨찾기 내림차순
+
+with temp as (
+    select REST_ID, round(avg(REVIEW_SCORE), 2) as SCORE 
+    from REST_REVIEW
+    group by REST_ID
+), temp2 as (
+    select I.REST_ID, I.REST_NAME, I.FOOD_TYPE, I.FAVORITES, I.ADDRESS, T.SCORE as SCORE
+    from temp T
+    inner join REST_INFO I on T.REST_ID = I.REST_ID
+    where I.ADDRESS like '서울%'
+)
+
+select *
+from temp2
+order by SCORE desc, FAVORITES desc;
