@@ -25,3 +25,19 @@ with temp as (
 select ANIMAL_ID, NAME
 from temp
 where rn = 1 or rn = 2;
+
+
+
+# 입양 / 보호기간 가장 길었던 두 마리(limit, row_numebr) id, 이름 조회
+# 보호기간이 긴 순으로 조회
+# 풀이1 - 윈도우 함수
+with temp as (
+    select I.ANIMAL_ID, I.NAME,
+            row_number() over (order by timestampdiff(day, I.DATETIME, O.DATETIME) + 1 desc) as rn
+    from ANIMAL_INS I
+    inner join ANIMAL_OUTS O on  I.ANIMAL_ID = O.ANIMAL_ID
+)
+
+select ANIMAL_ID, NAME
+from temp
+where temp.rn = 1 or temp.rn = 2;
