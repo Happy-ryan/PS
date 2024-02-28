@@ -19,4 +19,20 @@ with cs_docter as (
 select *
 from temp;
 
-# 43  바라  PT22000019  CS  니모  2022-04-13 15:30:00
+# 2022년 4월 13일 취소되지 않는 흉부외과 진료예약
+# 예약번호, 환지이름, 환자번호, 진료과코드, 의사이름, 진료예약일시
+# 진료예약일시 오름차순
+
+with temp as (
+    select APNT_NO, PT_NO, MCDP_CD, MDDR_ID, APNT_YMD
+    from APPOINTMENT
+    where (year(APNT_YMD) = 2022 and month(APNT_YMD) = 4 and day(APNT_YMD) = 13) and
+        APNT_CNCL_YN = 'N' and
+        MCDP_CD = 'CS'
+)
+
+select T.APNT_NO, P.PT_NAME, T.PT_NO, T.MCDP_CD, D.DR_NAME, T.APNT_YMD
+from temp T
+inner join PATIENT P on T.PT_NO = P.PT_NO
+inner join DOCTOR D on T.MDDR_ID = D.DR_ID
+order by  T.APNT_YMD asc; 
