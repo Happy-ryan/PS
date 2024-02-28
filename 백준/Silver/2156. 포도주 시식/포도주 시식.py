@@ -1,18 +1,30 @@
-n = int(input())
-arr = [ int(input()) for _ in range(n)]
-# print(arr)
-# dp[i] i번째 와인을 반드시 먹을 때 3연속 되지 않는 최대 와인의 양
-# i번째 와인arr[i]을 선택하고 바로 옆 i-1번째를 선택하는지 안한는지로 구분
-dp =[0]*(n+1)
-if n==1:
-    print(arr[0])
-elif n==2:
-    print(arr[0]+arr[1])
-else:
-    dp[1] = arr[0]
-    dp[2] = arr[0]+arr[1]
-    dp[3] = max(dp[2],arr[2]+arr[1],arr[2]+arr[0])
-    for i in range(4,n+1):
-        dp[i] = max(dp[i-1],arr[i-1]+arr[i-2]+dp[i-3],arr[i-1]+dp[i-2])
+# 선택하면 그 잔 모두 섭취
+# 연속 3개 섭취 불가!
+# 최대로 마실 수 있는 포도주의 양
 
-    print(max(dp))
+n = int(input())
+nums = [int(input()) for _ in range(n)]
+
+def solution(n, nums):
+    # dp[i][j] i번째 와인까지 봐서 j개를 연속으로 골랐을 때의 포도주의 최대량
+    # '3연속'이 불가능!! 최대 연속이다!
+    # dp[i][1]은 i가 0 ~ i - 2까지 값 중 최대값에 nums[i]를 더한다.
+    # i - 2 와 i는 연속하지 않기때문에 dp[0 ~ (i - 2)][1~2]를 모두 관찰해야함.
+    # dp[i][2]는 연속하다는 의미이므로 바로 내 앞의 dp[i - 1][1]에 nums[i]를 더한다.
+    inf = int(1e9)
+    dp = [[-inf for _ in range(3)] for _ in range(n + 1)]
+    nums = [0] + nums
+    dp[0][0] = 0
+
+    for i in range(1, n + 1):
+        dp[i][0] = max(dp[i-1])
+        dp[i][1] = dp[i - 1][0] + nums[i]
+        dp[i][2] = dp[i - 1][1] + nums[i]
+
+    max_ans = 0
+    for row in dp:
+        max_ans = max(max_ans, max(row))
+        
+    return max_ans
+
+print(solution(n, nums))
