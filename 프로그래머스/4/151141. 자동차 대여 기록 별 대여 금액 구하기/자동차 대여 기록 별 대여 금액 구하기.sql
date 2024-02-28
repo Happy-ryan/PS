@@ -52,6 +52,26 @@ left join CAR_RENTAL_COMPANY_DISCOUNT_PLAN P
     order by FEE desc, T.HISTORY_ID desc;
 
 
+# 대여기록별 대여금액 / 기록id, 대여금액 리스트 / 대여 금액 기준 내림차순 / id 기준 내림차순
+# 자동차의 종류가 '트럭'
+with temp as (
+    select H.HISTORY_ID, H.CAR_ID, C.CAR_TYPE, C.DAILY_FEE,
+            timestampdiff(day, H.START_DATE, H.END_DATE) + 1 as DURATION,
+            case
+                when timestampdiff(day, H.START_DATE, H.END_DATE) + 1 < 7 then null
+                when timestampdiff(day, H.START_DATE, H.END_DATE) + 1 < 30 then '7일 이상'
+                when timestampdiff(day, H.START_DATE, H.END_DATE) + 1 < 90 then '30일 이상'
+                else '90일 이상'
+            end as DURATION_TYPE              
+    from CAR_RENTAL_COMPANY_RENTAL_HISTORY H
+    inner join CAR_RENTAL_COMPANY_CAR C on H.CAR_ID = C.CAR_ID
+    where C.CAR_TYPE = '트럭'
+)
+
+select T.HISTORY_ID, round(((100 - ifnull(discount_rate, 0)) * T.DURATION * T.DAILY_FEE) / 100 , 0) as FEE
+from temp T
+left join CAR_RENTAL_COMPANY_DISCOUNT_PLAN P on T.CAR_TYPE = P.CAR_TYPE and T.DURATION_TYPE = P.DURATION_TYPE
+order by FEE desc, T.HISTORY_ID desc;
 
 # HISTORY_ID	FEE
 # 724	6336960
