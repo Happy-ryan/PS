@@ -31,4 +31,23 @@ def solution_1(n, s, m, vols):
         return -1
 
 
-print(solution_1(n, s, m, vols))
+def solution_2(n, s, m, vols):
+    # dp[i][j] i번째 j볼륨을 만들 수 있는 경우의 수
+    dp = [[0 for _ in range(m + 1)] for _ in range(n + 1)]
+    vols = [0] + vols
+    
+    dp[0][s] = 1
+    for i in range(1, n + 1):
+        for j in range(m + 1):
+            if j - vols[i] >= 0:
+                dp[i][j] += dp[i - 1][j - vols[i]]
+            if j + vols[i] <= m:
+                dp[i][j] += dp[i - 1][j + vols[i]]
+    
+    ans = -1
+    for idx, x in enumerate(dp[n]):
+        if x != 0:
+            ans = idx
+    return ans
+
+print(solution_2(n, s, m, vols))
