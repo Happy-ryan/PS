@@ -51,3 +51,16 @@ from temp T
 inner join USED_GOODS_FILE F on T.BOARD_ID = F.BOARD_ID
 where T.rn = 1
 order by FILE_PATH desc;
+
+# 조회수가 가장 높은 중고거래 게시물(limit, 윈도우함수)
+with temp as (
+    select BOARD_ID,
+        row_number() over (order by VIEWS desc) as rn
+    from USED_GOODS_BOARD
+)
+
+select concat('/home/grep/src/', F.BOARD_ID, '/',F.FILE_ID, F.FILE_NAME, F.FILE_EXT) as FILE_PATH
+from temp T
+inner join USED_GOODS_FILE F on T.BOARD_ID = F.BOARD_ID
+where T.rn = 1
+order by F.FILE_ID desc;
