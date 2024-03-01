@@ -108,3 +108,25 @@ order by FEE desc, T.HISTORY_ID desc;
 # 705	107000
 # 627	107000
 # 524	107000
+
+# 자동차 종류 - 트럭 / 대여기록별 대여금액 구하기 / 대여금액 기준 내림차순 / 대여 기록id기준 내림차순
+with temp as (
+    select H.HISTORY_ID, C.DAILY_FEE * (timestampdiff(day, START_DATE, END_DATE) + 1) as TOTAL_FEE,
+        case
+            when timestampdiff(day, START_DATE, END_DATE) + 1 < 7 then null
+            when timestampdiff(day, START_DATE, END_DATE) + 1 < 30 then '7일 이상'
+            when timestampdiff(day, START_DATE, END_DATE) + 1 < 90 then '30일 이상'
+            else '90일 이상'
+        end as DURATION_TYPE,
+        C.CAR_TYPE
+    from CAR_RENTAL_COMPANY_CAR C
+    inner join CAR_RENTAL_COMPANY_RENTAL_HISTORY H on C.CAR_ID = H.CAR_ID
+    where C.CAR_TYPE = '트럭'
+    
+)
+
+select T.HISTORY_ID, round((T.TOTAL_FEE * (100 - ifnull(P.discount_rate, 0)) / 100) ,0) as FEE
+from temp T
+left join CAR_RENTAL_COMPANY_DISCOUNT_PLAN P 
+        on T.DURATION_TYPE = P.DURATION_TYPE and T.CAR_TYPE = P.CAR_TYPE
+order by FEE desc, HISTORY_ID desc;
