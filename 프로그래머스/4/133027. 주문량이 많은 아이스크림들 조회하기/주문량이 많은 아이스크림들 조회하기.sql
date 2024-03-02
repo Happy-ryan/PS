@@ -53,3 +53,19 @@ with temp5 as (
 select FLAVOR
 from temp5
 limit 3;
+
+# 7월 아이스크림 총 주문량과 상반기 아이스크림 총 주문량을 더한 값이 큰 순서대로 3개의 맛
+with temp as (
+    select FLAVOR, sum(TOTAL_ORDER) as TOTAL_ORDER
+    from JULY
+    group by FLAVOR
+), temp2 as (
+    select H.FLAVOR, H.TOTAL_ORDER + T.TOTAL_ORDER as TOTAL_ORDER
+    from FIRST_HALF H
+    inner join temp T on H.FLAVOR = T.FLAVOR
+)
+
+select FLAVOR
+from temp2
+order by TOTAL_ORDER desc
+limit 3;
