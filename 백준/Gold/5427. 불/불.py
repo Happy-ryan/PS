@@ -2,7 +2,6 @@
 # 불이 도달하기 전에 나가는 것이 포인트!
 from collections import deque
 
-
 def solution(n, m, board):
     inf = int(1e14)
     dr = [-1, 1, 0, 0]
@@ -66,48 +65,16 @@ def solution(n, m, board):
 
         return seconds
 
-    def bfs2(target: list[tuple], limit: list[tuple]):
-        visited = [[False for _ in range(m)] for _ in range(n)]
-        seconds = [[inf for _ in range(m)] for _ in range(n)]
-
-        for r in range(n):
-            for c in range(m):
-                if board[r][c] == "#":
-                    visited[r][c] = True
-
-        dq = deque([])
-
-        for r, c in target:
-            dq.append((r, c))
-            visited[r][c] = True
-            seconds[r][c] = 1
-
-        while dq:
-            cr, cc = dq.popleft()
-            for k in range(4):
-                nr = cr + dr[k]
-                nc = cc + dc[k]
-                if (
-                    in_range(nr, nc)
-                    and not visited[nr][nc]
-                    and seconds[cr][cc] + 1 < limit[nr][nc]
-                ):
-                    dq.append((nr, nc))
-                    visited[nr][nc] = True
-                    seconds[nr][nc] = seconds[cr][cc] + 1
-
-        return seconds
-
     fires, person = find_grid()
 
     exits = find_exit()
     fire_second = bfs(fires)
-    person_second = bfs2(person, fire_second)
+    person_second = bfs(person)
 
     flag = False
     min_time = inf
     for r, c in exits:
-        if person_second[r][c] != inf:
+        if fire_second[r][c] > person_second[r][c]:
             flag = True
             min_time = min(min_time, person_second[r][c])
 
