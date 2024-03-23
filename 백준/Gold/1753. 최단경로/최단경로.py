@@ -1,35 +1,41 @@
-import sys
+n, m = map(int, input().split())
+start = int(input())
+adj = [[] for _ in range(n + 1)]
+for _ in range(m):
+    u, v, w = map(int, input().split())
+    adj[u].append((w, v))
+    
 from heapq import heappush, heappop
+    
+def solution(n, m, start, adj):
+    inf = int(1e18)
+    
+    visited = [inf for _ in range(n + 1)]
+    
+    def di(start):
+        
+        heap = []
+        visited[start] = 0
+        heappush(heap, (0, start))
+        
+        while heap:
+            d, cur = heappop(heap)
+            
+            if d > visited[cur]:
+                continue
+            
+            for nd, nxt in adj[cur]:
+                if visited[nxt] > nd + d:
+                    visited[nxt] = nd +d
+                    heappush(heap, (nd + d, nxt))
+        
+    di(start)
+    
+    for i in range(1, n + 1):
+        if visited[i] == inf:
+            print('INF')
+        else:
+            print(visited[i])
+    
 
-input = sys.stdin.readline
-
-N, M = map(int, input().split())
-s = int(input())
-
-INF = 1e18
-dist = [INF for _ in range(N + 1)]
-adj = [[] for _ in range(N + 1)]
-
-for _ in range(M):
-    a, b, c = map(int, input().split())
-    adj[a].append((b, c))
-
-heap = []
-heappush(heap, (0, s))
-dist[s] = 0
-
-while len(heap) != 0:
-    d, cur = heappop(heap)
-
-    if dist[cur] != d: continue
-
-    for nxt, cost in adj[cur]:
-        if dist[nxt] > d + cost:
-            dist[nxt] = d + cost
-            heappush(heap, (dist[nxt], nxt))
-
-for i in range(1, N + 1):
-    if dist[i] == INF:
-        print('INF')
-    else:
-        print(dist[i])
+solution(n, m, start, adj)
