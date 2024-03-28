@@ -6,21 +6,18 @@ def solution(n, nums):
     visited = [False for _ in range(n + 1)]
 
     def dfs(start):
-        nonlocal cnt
         visited[start] = True
-        cnt += 1
 
         for nxt in adj[start]:
             if not visited[nxt]:
                 dfs(nxt)
-    ans = []
+    ans = 0
     for s in range(1, n + 1):
         if not visited[s]:
-            cnt = 0
             dfs(s)
-            ans.append(cnt)
+            ans += 1
     
-    return len(ans)
+    return ans
 
 
 t = int(input())
