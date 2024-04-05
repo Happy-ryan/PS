@@ -33,7 +33,7 @@ def solution(maps):
                     dq.append((nr, nc))
                     visited[nr][nc] = True
                     girds.append((nr, nc))
-        girds.sort()
+                    
         return girds
 
     def bomb():
