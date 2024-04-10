@@ -31,14 +31,19 @@ def solution(n, edges, two_node):
 
     frist_node_prev = prevs[0]
     second_node_prev = prevs[1]
+
     # print(frist_node_prev)
     # print(second_node_prev)
-    ans = (inf, inf)
-    for x in frist_node_prev:
-        if x in second_node_prev:
-            ans = min(ans, (frist_node_prev.index(x) + second_node_prev.index(x), x))
-    
-    return ans[1]
+
+    # 두 노드의 공통조상 노드 뒤부터는 전부 동일할 것
+    # 공통조상이 4인데 4이후부터는 동일한 것 볼 수 있음!
+    # [3, 16, 10, 4, 8]
+    # [15, 6, 4, 8]
+    tmp = -1
+    while True:
+        if abs(tmp) > min(len(frist_node_prev), len(second_node_prev)) or frist_node_prev[tmp] != second_node_prev[tmp]:
+            return frist_node_prev[tmp + 1]
+        tmp -= 1
 
 
 t = int(input())
@@ -47,30 +52,3 @@ for _ in range(t):
     edges = [list(map(int, input().split())) for _ in range(n - 1)]
     two_node = list(map(int, input().split()))
     print(solution(n, edges, two_node))
-
-# 1
-# 16
-# 1 14
-# 8 5
-# 10 16
-# 5 9
-# 4 6
-# 8 4
-# 4 10
-# 1 13
-# 6 15
-# 10 11
-# 6 7
-# 10 2
-# 16 3
-# 8 1
-# 16 12
-# 3 12
-
-# 1
-# 5
-# 2 3
-# 3 4
-# 3 1
-# 1 5
-# 3 5
