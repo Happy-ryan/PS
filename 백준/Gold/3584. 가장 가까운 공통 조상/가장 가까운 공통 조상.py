@@ -1,15 +1,15 @@
 # https://www.acmicpc.net/problem/3584
 import sys
+
 sys.setrecursionlimit(10**5)
 
+
 def solution(n, edges, two_node):
-    adj = [[] for _ in range(n + 1)]
     radj = [[] for _ in range(n + 1)]
     pars = set()
     for edge in edges:
         par, son = edge
         pars.add(par)
-        adj[par].append(son)
         radj[son].append(par)
 
     inf = int(1e18)
@@ -29,8 +29,8 @@ def solution(n, edges, two_node):
         dfs(node)
         prevs.append(prev)
 
-    frist_node_prev = prevs[0]
-    second_node_prev = prevs[1]
+    frist_node_prev = list(reversed(prevs[0]))
+    second_node_prev = list(reversed(prevs[1]))
 
     # print(frist_node_prev)
     # print(second_node_prev)
@@ -39,11 +39,11 @@ def solution(n, edges, two_node):
     # 공통조상이 4인데 4이후부터는 동일한 것 볼 수 있음!
     # [3, 16, 10, 4, 8]
     # [15, 6, 4, 8]
-    tmp = -1
+    tmp = 0
     while True:
-        if abs(tmp) > min(len(frist_node_prev), len(second_node_prev)) or frist_node_prev[tmp] != second_node_prev[tmp]:
-            return frist_node_prev[tmp + 1]
-        tmp -= 1
+        if tmp >= min(len(frist_node_prev), len(second_node_prev)) or (frist_node_prev[tmp] != second_node_prev[tmp]):
+            return frist_node_prev[tmp - 1]
+        tmp += 1
 
 
 t = int(input())
