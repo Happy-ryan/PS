@@ -10,7 +10,7 @@ def solution(n, k, nations):
         if nations[i][1:] == nations[i - 1][1:]:
             arr.append(arr[-1])
         else:
-            arr.append(arr[-1] + 1)
+            arr.append(len(arr) + 1)
 
     for idx, row in enumerate(nations):
         if row[0] == k:
