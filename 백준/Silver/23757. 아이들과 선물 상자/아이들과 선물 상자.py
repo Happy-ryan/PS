@@ -1,6 +1,5 @@
 from heapq import heappop, heappush
 
-# python에서는 기본적으로 최소 힙이므로 문제 해결을 위해 최대힙으로 변경
 n, m = map(int, input().split())
 presents = list(map(int, input().split()))
 wishs = list(map(int, input().split()))
