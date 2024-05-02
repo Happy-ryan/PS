@@ -20,11 +20,11 @@ sushi_order = deque(list(map(int, input().split())))
 def solution(n, m, orders, sushi_order):
     # 초밥의 순서는 고정이다 > 각 초밥을 먹을 사람들을 넣어놓자!
     # 초밥의 순서 돌 때 어떤 초밥에 어떤 사람이 예약되어있는지 큐로 넣어놓음
-    max_sushi = max(sushi_order)
-    sushi_court = [deque() for _ in range(max_sushi + 1)]
+    sushi_court = [deque() for _ in range(max(sushi_order) + 1)]
+    check = set(sushi_order)
     for idx, order in enumerate(orders):
         for sushi in order[1:]:
-            if sushi > max_sushi:
+            if sushi not in check:
                 continue
             sushi_court[sushi].append(idx)
             
