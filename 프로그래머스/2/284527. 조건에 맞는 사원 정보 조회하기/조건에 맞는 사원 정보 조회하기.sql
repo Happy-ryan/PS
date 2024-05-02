@@ -5,7 +5,8 @@
 with total_year as (
     select  EMP_NO, 
             sum(SCORE) as TOTAL_SCORE,
-            row_number() over (order by sum(SCORE) desc) as RN
+            -- 동점자 같은 순위 부여 rank
+            rank() over (order by sum(SCORE) desc) as RN
     from HR_GRADE
     group by EMP_NO
 )
