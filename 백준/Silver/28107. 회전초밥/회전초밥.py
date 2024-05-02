@@ -4,7 +4,7 @@
 # 같은 종류의 초밥은 최대 1번만 먹음
 # 주문목록과 초밥 만들어지는 순서가 주어질 때, 각 손님이 먹게 되는 초밥의 개수
 
-from collections import deque
+from collections import deque, defaultdict
 
 n, m = map(int, input().split())
 orders = [list(map(int, input().split())) for _ in range(n)]
@@ -20,18 +20,23 @@ sushi_order = deque(list(map(int, input().split())))
 def solution(n, m, orders, sushi_order):
     # 초밥의 순서는 고정이다 > 각 초밥을 먹을 사람들을 넣어놓자!
     # 초밥의 순서 돌 때 어떤 초밥에 어떤 사람이 예약되어있는지 큐로 넣어놓음
-    sushi_court = [deque() for _ in range(max(sushi_order) + 1)]
+
+    max_sushi = max(sushi_order)
+    # sushi_court = [deque() for _ in range(max_sushi + 1)]
+    sushi_court_dic = defaultdict(deque)
+    # for문 돌때마다 set만들면 안된다.
     check = set(sushi_order)
     for idx, order in enumerate(orders):
         for sushi in order[1:]:
             if sushi not in check:
                 continue
-            sushi_court[sushi].append(idx)
+            # sushi_court[sushi].append(idx)
+            sushi_court_dic[sushi].append(idx)
             
     answer = [0] * n
     for sushi in sushi_order:
-        if sushi_court[sushi]:
-            answer[sushi_court[sushi].popleft()] += 1
+        if sushi_court_dic[sushi] and sushi in sushi_court_dic:
+            answer[sushi_court_dic[sushi].popleft()] += 1
             
     return answer
 
