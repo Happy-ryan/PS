@@ -6,4 +6,5 @@
 select count(ID) as FISH_COUNT, month(TIME) as MONTH
 from FISH_INFO
 group by month(TIME)
+having count(month(TIME)) is not NULL
 order by month(TIME) asc;
