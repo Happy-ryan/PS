@@ -19,4 +19,5 @@ with recursive tree as (
 select ID
 from tree
 group by ID
-having(max(GE) = 3);
+having(max(GE) = 3)
+order by ID;
