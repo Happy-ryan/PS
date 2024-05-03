@@ -111,7 +111,8 @@ order by FEE desc, T.HISTORY_ID desc;
 
 # 자동차 종류 - 트럭 / 대여기록별 대여금액 구하기 / 대여금액 기준 내림차순 / 대여 기록id기준 내림차순
 with temp as (
-    select H.HISTORY_ID, C.DAILY_FEE * (timestampdiff(day, START_DATE, END_DATE) + 1) as TOTAL_FEE,
+    select H.HISTORY_ID,
+        C.DAILY_FEE * (timestampdiff(day, START_DATE, END_DATE) + 1) as TOTAL_FEE,
         case
             when timestampdiff(day, START_DATE, END_DATE) + 1 < 7 then null
             when timestampdiff(day, START_DATE, END_DATE) + 1 < 30 then '7일 이상'
@@ -130,3 +131,27 @@ from temp T
 left join CAR_RENTAL_COMPANY_DISCOUNT_PLAN P 
         on T.DURATION_TYPE = P.DURATION_TYPE and T.CAR_TYPE = P.CAR_TYPE
 order by FEE desc, HISTORY_ID desc;
+
+-- 자동차의 종류 = 트럭 / 대여 기록 별 대여금액 / 기록ID
+-- 대여 금액 기준 내림차순, ID기준 내림차순
+with history as (
+    select  H.HISTORY_ID, C.CAR_TYPE,
+            case
+                when timestampdiff(day, H.START_DATE, H.END_DATE) + 1 >= 90 then '90일 이상'
+                when timestampdiff(day, H.START_DATE, H.END_DATE) + 1 >= 30 then '30일 이상'
+                when timestampdiff(day, H.START_DATE, H.END_DATE) + 1 >= 7 then '7일 이상'
+                else null
+            end as DURATION_TYPE,
+            C.DAILY_FEE * (timestampdiff(day, H.START_DATE, H.END_DATE) + 1) as TOTAL_FEE
+    from CAR_RENTAL_COMPANY_RENTAL_HISTORY as H
+    left join CAR_RENTAL_COMPANY_CAR as C on H.CAR_ID = C.CAR_ID
+    where C.CAR_TYPE = '트럭'
+)
+
+select H.HISTORY_ID, round(((100 - ifnull(P.DISCOUNT_RATE, 0)) * H.TOTAL_FEE) / 100, 0) as FEE
+from history as H
+left join CAR_RENTAL_COMPANY_DISCOUNT_PLAN as P 
+    on H.DURATION_TYPE = P.DURATION_TYPE and P.CAR_TYPE = H.CAR_TYPE
+order by FEE desc, H.HISTORY_ID desc
+
+
