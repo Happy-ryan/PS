@@ -8,7 +8,7 @@ def solution(n, votes):
     r += votes.count(-1)
     i += votes.count(0)
     
-    if n > 1 and i >= n // 2:
+    if i >= n / 2:
         return 'INVALID'
 
     if r >= a:
