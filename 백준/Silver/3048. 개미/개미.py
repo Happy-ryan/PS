@@ -5,13 +5,14 @@ t = int(input())
 
 def solution(ants1, ants2, t):
     state = []
+    # ants1은 홀수 / ant2는 짝수
+    # 내 앞에 있는 개미가 반대방향인지 알려면 ants1소속인지, ants2소속인지 알 필요가 있다.
+    # 그 때마다 in 써서 찾을 수도 있는데 중복되는 알파벳이 없으므로 짝수, 홀수로 소속을 대신 파악한다.
     for idx in range(len(ants1) - 1, -1, -1):
         state.append(str(idx * 2 + 1))
     for idx in range(len(ants2)):
         state.append(str(idx * 2))
     
-    # print(f"시간: {0}, {state}")
-    # print("=")
     
     # 홀수는 오른쪽으로만 / 짝수는 왼쪽으로만 이동!! 한 방향 이동이 포인트!
     # 짝을 지을 때 (홀수, 짝수)인 상태만 변경이 발생해야한다!
@@ -32,7 +33,6 @@ def solution(ants1, ants2, t):
         for x, y in move_ants:
             state[x], state[y] = state[y], state[x]
         
-        # print("변경할 위치", move_ants)
         return state
         
     def change(state):
@@ -49,10 +49,6 @@ def solution(ants1, ants2, t):
     for i in range(t):
         state = move(state)
         ans = change(state)
-        # print(f"시간: {i + 1}, 상태: {state}, 답: {ans}")
-        # print("-")
-    
-    
     return ans
     
 print(solution(ants1, ants2, t))
