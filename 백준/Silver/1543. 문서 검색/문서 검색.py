@@ -1,15 +1,20 @@
-A = input()
-B = input()
+doc = input()
+target = input()
 
-cnt = 0
-s = 0
-while s < len(A):
-# for s in range(len(A)):
-    e = s + len(B)
-    subA = A[s:e]
-    if subA == B:
-        cnt += 1
-        s += len(B)
-    else:
-        s += 1
-print(cnt)
+def solutino(doc, target):
+    cnt = 0
+    
+    idx = 0
+    k1 = len(doc)
+    k2= len(target)
+    while idx < k1:
+        check = doc[idx: idx + k2]
+        if check == target:
+            idx += k2
+            cnt += 1
+        else:
+            idx += 1
+            
+    return cnt
+
+print(solutino(doc, target))
