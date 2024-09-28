@@ -1,7 +1,7 @@
 doc = input()
 target = input()
 
-def solutino(doc, target):
+def solution(doc, target):
     cnt = 0
     
     idx = 0
@@ -17,4 +17,11 @@ def solutino(doc, target):
             
     return cnt
 
-print(solutino(doc, target))
+def solution2(doc, target):
+    
+    while True:
+        if doc.find(target) == -1:
+            return doc.count("@")
+        doc = doc.replace(target, "@")
+    
+print(solution2(doc, target))
