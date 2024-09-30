@@ -1,43 +1,49 @@
+n = int(input())
+board = [list(map(int, input().split())) for _ in range(n)]
+
 from collections import deque
 
-n = int(input())
-mat = [list(map(int, input().split())) for row in range(n)]
-
-def bfs(h_limit, n, mat):
-
+def solution(n, board):
     dr = [-1, 1, 0, 0]
     dc = [0, 0, -1, 1]
-
-    in_queue = [[False for col in range(n)] for row in range(n)]
-
-    def check(r, c):
-        return 0 <= r < n and 0<= c < n and\
-            not in_queue[r][c] and mat[r][c] > h_limit
     
-    q = deque([])
-    cnts = []
-    for r in range(n):
-        for c in range(n):
-            if in_queue[r][c] or mat[r][c] <= h_limit:
-                continue
-            q.append((r, c))
-            in_queue[r][c] = True
-            cnt = 0
-            while q:
-                cr, cc = q.popleft()
-                cnt += 1
-                for k in range(4):
-                    nr = cr + dr[k]
-                    nc = cc + dc[k]
-                    if check(nr, nc):
-                        in_queue[nr][nc] = True
-                        q.append((nr, nc))
-            cnts.append(cnt)
+    def in_range(r, c):
+        return 0 <= r < n and 0 <= c < n
     
-    return len(cnts)
+    def bfs(r, c, h):
+        dq = deque([])
+        
+        dq.append((r, c))
+        in_queue[r][c] = True
+        cnt = 1
+        
+        while dq:
+            cr, cc = dq.popleft()
+            for k in range(4):
+                nr = cr + dr[k]
+                nc = cc + dc[k]
+                if in_range(nr, nc) and\
+                    not in_queue[nr][nc] and\
+                    board[nr][nc] > h:
+                        
+                    dq.append((nr, nc))
+                    in_queue[nr][nc] = True
+                    cnt += 1
+        return cnt
+    
+    max_area = 0
+    for h in range(101):
+        cnts = []
+        in_queue = [[False for _ in range(n)] for _ in range(n)]
+        for r in range(n):
+            for c in range(n):
+                if board[r][c] <= h or in_queue[r][c]:
+                    continue
+                cnt = bfs(r, c, h)
+                cnts.append(cnt)
+        max_area = max(max_area, len(cnts))
+        # print(f"높이: {h}, max_area: {max_area}")
+    
+    return max_area
 
-ans = 0
-for h in range(101):
-    ans = max(ans, bfs(h, n, mat))
-
-print(ans)
+print(solution(n, board))
