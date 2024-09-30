@@ -1,7 +1,7 @@
-from collections import deque
-
 n = int(input())
 board = [list(input()) for _ in range(n)]
+
+from collections import deque
 
 def solution(n, board):
     
@@ -9,17 +9,15 @@ def solution(n, board):
     dc = [0, 0, -1, 1]
     
     in_queue = [[False for _ in range(n)] for _ in range(n)]
-    dq = deque([])
     
     def in_range(r, c):
-        return  0 <= r < n and 0 <= c < n
+        return 0 <= r < n and 0 <= c < n
     
     def bfs(r, c):
-        cnt = 0
-        
+        dq = deque([])
         dq.append((r, c))
         in_queue[r][c] = True
-        cnt += 1
+        cnt = 1
         
         while dq:
             cr, cc = dq.popleft()
@@ -30,17 +28,16 @@ def solution(n, board):
                     dq.append((nr, nc))
                     in_queue[nr][nc] = True
                     cnt += 1
-                    
         return cnt
-                    
+    
     cnts = []
     for r in range(n):
         for c in range(n):
-            if in_queue[r][c] or board[r][c] == '0':
+            if board[r][c] == '0' or in_queue[r][c]:
                 continue
             cnt = bfs(r, c)
             cnts.append(cnt)
-            
+    
     cnts.sort()
     print(len(cnts))
     for cnt in cnts:
