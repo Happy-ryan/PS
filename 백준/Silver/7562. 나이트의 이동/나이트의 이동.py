@@ -1,33 +1,47 @@
+t = int(input())
+
 from collections import deque
 
-T = int(input())
+def solution(l, chess):
 
-for _ in range(T):
-    n = int(input())
-    dist = [[0 for col in range(n)] for row in range(n)]
-    r1, c1 = map(int,input().split())
-    r2, c2 = map(int,input().split())
-    # 이동방향
-    dr = [-2,-2,2,2,-1,-1,1,1]
-    dc = [-1,1,-1,1,2,-2,2,-2]
-    # 
-    in_queue = [[False for col in range(n)] for row in range(n)]
-    #
-    def dist_check(r,c):
-        return 0 <= r <= n-1 and 0 <= c <= n-1
-    #
-    dist[r1][c1] = 0
-    q = deque([(r1,c1)])
-    in_queue[r1][c1] = True
-    # bfs 진입
-    while len(q)>0:
-        r,c = q.popleft()
-        for k in range(8):
-            nr = r +dr[k]
-            nc = c +dc[k]
-            if dist_check(nr,nc) and\
-                not in_queue[nr][nc]:
-                    q.append((nr,nc))
+    inf = int(1e18)
+    dr = [-1, 1, 2, 2, -2, -2, -1, 1]
+    dc = [2, 2, -1, 1, -1, 1, -2, -2]
+    
+    in_queue = [[False for _ in range(l)] for _ in range(l)]
+    dist = [[inf for _ in range(l)] for _ in range(l)]
+    
+    def in_range(r, c):
+        return 0 <= r < l and 0 <= c < l
+    
+    def bfs(r, c):
+        
+        dq = deque([])
+        dq.append((r, c))
+        dist[r][c] = 0
+        in_queue[r][c] = True
+        
+        while dq:
+            cr, cc = dq.popleft()
+            for k in range(8):
+                nr = cr + dr[k]
+                nc = cc + dc[k]
+                if in_range(nr, nc) and not in_queue[nr][nc]:
+                    dq.append((nr, nc))
+                    # cr, cc 주의! 변수 주의!!
+                    dist[nr][nc] = dist[cr][cc] + 1
                     in_queue[nr][nc] = True
-                    dist[nr][nc] = dist[r][c]+1
-    print(dist[r2][c2])
+                    
+        return dist
+    
+    start_chess = chess[0]
+    end_chess = chess[1]
+    
+    dist = bfs(start_chess[0], start_chess[1])
+    
+    return dist[end_chess[0]][end_chess[1]]
+
+for _ in range(t):
+    l = int(input())
+    chess = [list(map(int, input().split())) for _ in range(2)]
+    print(solution(l, chess))
