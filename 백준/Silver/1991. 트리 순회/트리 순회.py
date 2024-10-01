@@ -1,68 +1,54 @@
-# https://www.acmicpc.net/problem/1991
-from collections import defaultdict
-
 n = int(input())
 nodes = [list(input().split()) for _ in range(n)]
-tree = defaultdict(list)
-root_node = 'A'
 
-for root, right, left in nodes:
-    tree[root].append(right)
-    tree[root].append(left)
+from collections import defaultdict
 
-def preorder(root: str):
-    if tree[root][0] == '.' and tree[root][1] == '.':
-        print(root, end="")
-        return
+def solution(n, nodes):
     
-    left = tree[root][0]
-    right = tree[root][1]
+    graph = defaultdict(list)
     
-    print(root, end="")
-    
-    if left != '.':
-        preorder(left)
+    for node in nodes:
+        graph[node[0]] = [node[1], node[2]]
         
-    if right != '.':
-        preorder(right)
-
-
-def inorder(root):
-    if tree[root][0] == '.' and tree[root][1] == '.':
-        print(root, end="")
-        return
+    preorder_list = []
+    def preorder(node):
+        # 현재 노드
+        preorder_list.append(node)
+        # 왼쪽 자식
+        if graph[node][0] != '.':
+            preorder(graph[node][0])
+        # 오른쪽 지식
+        if graph[node][1] != '.':
+            preorder(graph[node][1])
+            
+    preorder('A')
+    print(''.join(preorder_list))
     
-    left = tree[root][0]
-    right = tree[root][1]
+    inorder_list = []
+    def inorder(node):
+        # 왼쪽 자식
+        if graph[node][0] != '.':
+            inorder(graph[node][0])
+        # 현재 노드
+        inorder_list.append(node)
+        # 오른쪽 자식
+        if graph[node][1] != '.':
+            inorder(graph[node][1])
+    inorder('A')
+    print(''.join(inorder_list))
     
-    if left != '.':
-        inorder(left)
-        
-    print(root, end="")
+    post_list = []
+    def postorder(node):
+        # 왼쪽지식
+        if graph[node][0] != '.':
+            postorder(graph[node][0])
+        # 오른쪽 자식
+        if graph[node][1] != '.':
+            postorder(graph[node][1])
+        # 현재 노드
+        post_list.append(node)
+            
+    postorder('A')
+    print(''.join(post_list))
     
-    if right != '.':
-        inorder(right)
-
-
-def postorder(root):
-    if tree[root][0] == '.' and tree[root][1] == '.':
-        print(root, end="")
-        return
-
-    left = tree[root][0]
-    right = tree[root][1]
-    
-    if left != '.':
-        postorder(left)
-        
-    if right != '.':
-        postorder(right)
-        
-    print(root, end="")
-    
-
-preorder(root_node)
-print()
-inorder(root_node)
-print()
-postorder(root_node)
+solution(n, nodes)
