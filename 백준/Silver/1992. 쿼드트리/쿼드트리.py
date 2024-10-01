@@ -1,30 +1,36 @@
-# https://www.acmicpc.net/problem/1992
-
 n = int(input())
 board = [list(input()) for _ in range(n)]
 
+def solution(n, board):
+    global ans
+    def check(r, c, dr, dc):   
+            flag = board[r][c]
+            for i in range(r, r + dr):
+                for j in range(c, c + dc):
+                    if board[i][j] != flag:
+                        return False
+            return flag
     
-def can_compress(r, c, w):
-    standard = board[r][c]
-    for i in range(r, r + w):
-        for j in range(c, c + w):
-            if standard != board[i][j]:
-                return False
-    return True
-
-
-stack = []
-def DC(r, c, w):
-    if can_compress(r, c, w):
-        stack.append(board[r][c])
-        return
-
-    stack.append('(')
-    DC(r, c, w // 2)
-    DC(r, c + w // 2, w // 2)
-    DC(r + w // 2, c, w // 2)
-    DC(r + w // 2, c + w // 2, w // 2)
-    stack.append(')')
-
-DC(0, 0, n)
-print(''.join(stack))
+    ans = ''
+    def f(r, c, x, y):
+        global ans
+        # 재귀는 종료조건!
+        flag = check(r, c, x, y)
+        if flag:
+            ans += flag
+            return
+        
+        ans += '('
+        # 절반씩 보자
+        f(r, c, x // 2, y // 2)
+        f(r, c + y // 2, x // 2, y // 2)
+        f(r + x // 2, c, x // 2, y // 2)
+        f(r + x // 2, c + y // 2, x // 2, y // 2)
+        ans += ')'
+    
+    # 재귀
+    f(0, 0, n, n)
+    
+    return ans
+    
+print(solution(n, board))
