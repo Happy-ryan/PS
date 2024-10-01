@@ -12,14 +12,11 @@ def solution(n, nodes):
         
     preorder_list = []
     def preorder(node):
-        # 현재 노드
+        # 루트
         preorder_list.append(node)
-        # 왼쪽 자식
-        if graph[node][0] != '.':
-            preorder(graph[node][0])
-        # 오른쪽 지식
-        if graph[node][1] != '.':
-            preorder(graph[node][1])
+        for next in graph[node]:
+            if next != '.':
+                preorder(next)
             
     preorder('A')
     print(''.join(preorder_list))
@@ -39,12 +36,9 @@ def solution(n, nodes):
     
     post_list = []
     def postorder(node):
-        # 왼쪽지식
-        if graph[node][0] != '.':
-            postorder(graph[node][0])
-        # 오른쪽 자식
-        if graph[node][1] != '.':
-            postorder(graph[node][1])
+        for next in graph[node]:
+            if next != '.':
+                postorder(next)
         # 현재 노드
         post_list.append(node)
             
