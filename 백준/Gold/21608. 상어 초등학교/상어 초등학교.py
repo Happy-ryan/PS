@@ -40,13 +40,14 @@ def solution(n, students):
                 candidate_seat.append((pref_cnt, blank_cnt, r, c))
                     # print(f"학생 번호: {student_number}, 인접한 칸의 선호학생의 수: {pref_cnt}, 인접한 칸의 빈칸의 수: {blank_cnt}, 좌표: {(r, c)}")
         # (r, c) 기준 인접한 칸의 선호학생의 수, (r, c) 기준 인접한 칸의 빈칸의 수, 행, 열
-        candidate_seat.sort(key=lambda x : (-x[0], -x[1], x[2], x[3]))
-        return candidate_seat
+        # candidate_seat.sort(key=lambda x : (-x[0], -x[1], x[2], x[3]))
+        x = min(candidate_seat, key=lambda x : (-x[0], -x[1], x[2], x[3]))
+        return x
     
     # 좌석에 학생들 배치
     def arrage_students():
         for student_number, student_prefer in students_infos.items():
-            _, _, r, c = choose(student_number, student_prefer)[0]
+            _, _, r, c = choose(student_number, student_prefer)
             board[r][c] = student_number
             # print(f"배치학생: {student_number}")
             # for row in board:
@@ -64,16 +65,9 @@ def solution(n, students):
                     if in_range(nr, nc) and\
                         board[nr][nc] in students_infos[board[r][c]]:
                             cnt += 1
-                if cnt == 0:
-                    sum_val += 0
-                elif cnt == 1:
-                    sum_val += 1
-                elif cnt == 2:
-                    sum_val += 10
-                elif cnt == 3:
-                    sum_val += 100
-                elif cnt == 4:
-                    sum_val += 1000
+                if cnt > 0:
+                    sum_val += 10 ** (cnt - 1)
+
                     
         return sum_val
     
