@@ -23,19 +23,21 @@ def solution(n, students):
         candidate_seat = []
         for r in range(n):
             for c in range(n):
+                if board[r][c] != 0:
+                    continue
                 pref_cnt = 0
                 blank_cnt = 0
                 # 해당 칸 비어있음!
-                if board[r][c] == 0:
-                    for k in range(4):
-                        nr = r + dr[k]
-                        nc = c + dc[k]
-                        if in_range(nr, nc):
-                            if board[nr][nc] in students_infos[student_number]:
-                                pref_cnt += 1
-                            if board[nr][nc] == 0:
-                                blank_cnt += 1
-                    candidate_seat.append((pref_cnt, blank_cnt, r, c))
+                for k in range(4):
+                    nr = r + dr[k]
+                    nc = c + dc[k]
+                    if not in_range(nr, nc):
+                        continue
+                    if board[nr][nc] in students_infos[student_number]:
+                        pref_cnt += 1
+                    if board[nr][nc] == 0:
+                        blank_cnt += 1
+                candidate_seat.append((pref_cnt, blank_cnt, r, c))
                     # print(f"학생 번호: {student_number}, 인접한 칸의 선호학생의 수: {pref_cnt}, 인접한 칸의 빈칸의 수: {blank_cnt}, 좌표: {(r, c)}")
         # (r, c) 기준 인접한 칸의 선호학생의 수, (r, c) 기준 인접한 칸의 빈칸의 수, 행, 열
         candidate_seat.sort(key=lambda x : (-x[0], -x[1], x[2], x[3]))
