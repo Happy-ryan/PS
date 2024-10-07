@@ -11,22 +11,15 @@ def solution(p, m, players):
         if not rooms:
             rooms.append([(level, name)])
         else:
-            # 방은 있는데..어디로 들어갈까?
-            check = []
-            for idx, room in enumerate(rooms):
-                check.append((idx, room[0][0]))
-            
-            inf = int(1e18)
-            flag = inf
-            for (idx, standard) in check:
-                if len(rooms[idx]) < m and standard - 10 <= level and level <= standard + 10:
-                    flag = idx
-                    break # 모든 방에 들어갈 수 있다면 가장 먼저 생성된 방에 들어가야함. 그래서 찾으면 멈추기
-                    
-            if flag == inf:
-                rooms.append([(level, name)])
-            else:
-                rooms[idx].append((level, name))
+            for room in rooms:
+                if len(room) == m:
+                    continue
+                if room[0][0] - 10 <= level <= room[0][0] + 10:
+                    room.append((level, name))
+                    return
+            rooms.append([(level, name)])
+        
+        return rooms
 
     for player in players:
         choose_room(player)
