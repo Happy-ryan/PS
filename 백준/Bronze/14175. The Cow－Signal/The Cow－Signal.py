@@ -11,5 +11,4 @@ def solution(r, c, k, board):
                 print(row)
             row = ''
             
-
 solution(r, c, k, board)
