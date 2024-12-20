@@ -10,3 +10,13 @@ select DR_NAME, DR_ID, MCDP_CD, date_format(HIRE_YMD, "%Y-%m-%d") as HIRE_YMD
 from DOCTOR
 where MCDP_CD = "CS" OR MCDP_CD	= "GS"
 order by HIRE_YMD desc, DR_NAME	asc;
+
+
+
+# 진료과 흉부외과 / 일반외과 - 의사 이름, 의사ID, 진료과, 고용일자 조회
+# 고용일자 기준 내림차순
+# 이름 기준 오름차순
+select DR_NAME, DR_ID, MCDP_CD, date_format(HIRE_YMD, '%Y-%m-%d') as HIRE_YMD
+from DOCTOR
+where MCDP_CD = 'CS' or MCDP_CD = 'GS'
+order by HIRE_YMD desc, DR_NAME asc;
