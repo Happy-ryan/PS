@@ -10,3 +10,10 @@ select FACTORY_ID, FACTORY_NAME, ADDRESS
 from FOOD_FACTORY
 where ADDRESS LIKE "강원도%"
 order by FACTORY_ID	asc ;
+
+# 강원도 위치 / 공장ID기준 오름차순
+select FACTORY_ID, FACTORY_NAME, ADDRESS
+from FOOD_FACTORY
+where ADDRESS like '강원도%'
+order by FACTORY_ID asc;
+
