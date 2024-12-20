@@ -29,10 +29,13 @@ select B.TITLE, B.BOARD_ID, R.REPLY_ID, R.WRITER_ID, R.CONTENTS,
 from USED_GOODS_BOARD as B
 inner join USED_GOODS_REPLY as R on B.BOARD_ID = R.BOARD_ID
 where year(B.CREATED_DATE) = 2022 and month(B.CREATED_DATE) = 10
-order by R.CREATED_DATE asc, B.TITLE asc
+order by R.CREATED_DATE asc, B.TITLE asc;
 
-
-
-
-
-
+# 2022년 10월에 작성된 게시글 제목 / 게시글 ID / 댓글ID / 댓글작성자ID / 댓글내용 / 댓글작성일
+# 댓글작성일 기준 오름차순 / 게시글 제목 기준 오름차순
+select B.TITLE, B.BOARD_ID, R.REPLY_ID, R.WRITER_ID, R.CONTENTS,
+       date_format(R.CREATED_DATE, '%Y-%m-%d')
+from USED_GOODS_BOARD as B
+inner join USED_GOODS_REPLY as R on B.BOARD_ID = R.BOARD_ID
+where year(B.CREATED_DATE) = 2022 and month(B.CREATED_DATE) = 10
+order by R.CREATED_DATE	 asc, B.TITLE asc;
