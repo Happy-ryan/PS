@@ -64,3 +64,24 @@ from temp T
 inner join USED_GOODS_FILE F on T.BOARD_ID = F.BOARD_ID
 where T.rn = 1
 order by F.FILE_ID desc;
+
+
+# 조회수가 가장 높은 중고거래 게시물에 대한 첨부파일 경로 조회
+# FIELD ID 기준으론 내림차순 정렬
+# 기본적 파일경로 =  /home/grep/src/ 
+# 게시글ID기준으로 디렉토리 구분
+# 파일이름은 파일ID, 이름, 파일확장자로 구성
+# 조회수가 가장 높은 게시물은 하나만 존재 <- 최대/ 최소 찾을 때 row_number는 굉장히 유용한 함수
+
+# 1) 최고 조회수 게시물 파악 <- 그룹별로 파악하라는 말을 안했으니까 max만 쓰면 될 듯!
+with tmp as (
+    select BOARD_ID,
+          row_number() over (order by VIEWS desc) as rn
+    from USED_GOODS_BOARD 
+)
+
+select concat('/home/grep/src/', T.BOARD_ID, '/',  F.FILE_ID, F.FILE_NAME, F.FILE_EXT) as FILE_PATH
+from tmp AS T
+right join USED_GOODS_FILE AS F on T.BOARD_ID = F.BOARD_ID
+where T.rn = 1
+order by F.FILE_ID desc;
