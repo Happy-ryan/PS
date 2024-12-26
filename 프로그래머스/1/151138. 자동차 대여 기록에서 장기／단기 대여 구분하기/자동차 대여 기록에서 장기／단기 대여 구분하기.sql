@@ -41,3 +41,26 @@ with temp as (
 
 select *
 from temp;
+
+# 대여시작일 2022년 9월
+# 대여기간 30일 이상이면 장기대여 그렇지 않으면 단기대여
+# 대여기간은 항상 +1 주의하기
+# 대여기록ID기준 내림차순
+
+# 대여기간 
+with tmp as (
+    select HISTORY_ID, CAR_ID, 
+           date_format(START_DATE, '%Y-%m-%d') as START_DATE,
+           date_format(END_DATE, '%Y-%m-%d') as END_DATE,
+           # timestampdiff(day, START_DATE, END_DATE) + 1 AS DATE,
+        case
+            when timestampdiff(day, START_DATE, END_DATE) + 1 >= 30 then '장기 대여'
+            else '단기 대여'
+        end as RENT_TYPE
+    from CAR_RENTAL_COMPANY_RENTAL_HISTORY
+    where year(START_DATE) = 2022 and month(START_DATE) = 9
+    order by HISTORY_ID desc
+)
+
+select *
+from tmp;
