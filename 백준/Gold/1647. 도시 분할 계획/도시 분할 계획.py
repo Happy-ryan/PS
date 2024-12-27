@@ -1,55 +1,49 @@
 # https://www.acmicpc.net/problem/1647
 # 무방향성 그래프, 임의의 집끼리 모두 연결 존재, 비용의 최소 => 최소 스패닝 트리
 
-# --대표노드 찾기
-def find(parent, x):
-    if parent[x] != x:
-        parent[x] = find(parent, parent[x])
-        return parent[x]
-    return x
-# -- 대표노드간 연결
-def union(parent, a, b):
-    pa = find(parent, a)
-    pb = find(parent, b)
-    if pa == pb:
-        return False
-    parent[pa] = pb
-    return True
-
-def merge(adj, n):
-    #
-    group_num = n
-    # -- 비용으로 정렬
-    adj.sort(key=lambda x: x[2])
-    # -- parent 자기자신의 값으로 초기화
-    parent = [i for i in range(n + 1)]
-    #
-    sum_val = 0
-    for v, u, cost in adj[:-1]:
-        # if cnt == n - 1:
-        #     break
-        if group_num == 2:
-            break
-        if union(parent, v, u):
-            group_num -= 1
-            sum_val += cost
-            # print(f"{u}와 {v}가 {cost} 비용으로 연결되었습니다.\n현재 그룹의 수는{group_num}입니다.\n---------")
-            
-    return sum_val
-    
-    
-
-# 마을을 분리시키기 => 대표노드가 되는 애들을 분리시켜야함!
 n, m = map(int, input().split())
-adj = []
+edges = []
 for _ in range(m):
-    v, u, cost = map(int, input().split())
-    adj.append((v, u, cost))
-    
-print(merge(adj, n))
+    a, b, c = map(int, input().split())
+    edges.append((a, b, c))
 
-# 23 / 1 / 4 / 5/ 6/ 7 - 6개
-# 23 / 46 /1/ 5/ 7 - 5개
-# 123 / 46 / 5 / 7 - 4개
-# 5123 / 46  / 7 - 3개
-# 512346 / 7 - 2개
+def solution(n, m, edges):
+    
+    # par / size
+    par = [-1] * (n + 1)
+    sizes = [1] * (n + 1)
+    
+    # find
+    def find(x):
+        if par[x] == -1:
+            return x
+        root = find(par[x])
+        par[x] = root
+        return root
+    
+    def union(x, y):
+        x = find(x)
+        y = find(y)
+        if x == y:
+            return False
+        # if sizes[x] < sizes[y]:
+        #     x, y = y, x
+        par[y] = x
+        sizes[x] += sizes[y]
+        return True
+        
+    edges.sort(key=lambda x : x[2]) # 비용 정렬
+    
+    cnt = n # 처음 부모의 수
+    cost = 0
+    for a, b, c in edges:
+        if cnt == 2:
+            return cost
+        if union(a, b):
+            cost += c
+            cnt -= 1
+            
+    # 2그룹으로 끝내 나누지 못할 때!
+    return -1
+
+print(solution(n, m, edges))
