@@ -6,13 +6,39 @@
 -- GROUP BY, HAVING, ORDER BY에서 SELECT의 alias를 사용할 수 있다
 -- WHEREd에서 SELECT의 alias 사용 불가
 
-select case
-            when month(DIFFERENTIATION_DATE) <= 3 then '1Q'
-            when month(DIFFERENTIATION_DATE) <= 6 then '2Q'
-            when month(DIFFERENTIATION_DATE) <= 9 then '3Q'
-            else '4Q'
-        end as QUARTER,
-        count(ID) as ECOLI_COUNT
+# select case
+#             when month(DIFFERENTIATION_DATE) <= 3 then '1Q'
+#             when month(DIFFERENTIATION_DATE) <= 6 then '2Q'
+#             when month(DIFFERENTIATION_DATE) <= 9 then '3Q'
+#             else '4Q'
+#         end as QUARTER,
+#         count(ID) as ECOLI_COUNT
+# from ECOLI_DATA
+# group by QUARTER
+# order by QUARTER;
+
+
+# sql에서 1 <= x <= 3 이렇게 쓰지말기!
+select 
+    case
+        when 1 <= month(DIFFERENTIATION_DATE) and  month(DIFFERENTIATION_DATE) <= 3 then '1Q'
+        when 4 <= month(DIFFERENTIATION_DATE) and  month(DIFFERENTIATION_DATE) <= 6 then '2Q'
+        when 7 <= month(DIFFERENTIATION_DATE) and  month(DIFFERENTIATION_DATE) <= 9  then '3Q'
+        else '4Q'
+    end as QUARTER,
+    count(ID) as ECOLI_COUNT
 from ECOLI_DATA
 group by QUARTER
-order by QUARTER;
+order by QUARTER asc;
+    
+
+
+
+
+
+
+
+
+
+
+
