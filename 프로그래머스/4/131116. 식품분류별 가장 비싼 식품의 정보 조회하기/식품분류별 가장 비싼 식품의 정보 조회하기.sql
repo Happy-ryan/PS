@@ -51,3 +51,45 @@ select CATEGORY, PRICE as MAX_PRICE, PRODUCT_NAME
 from temp T
 where T.rn = 1
 order by MAX_PRICE desc;
+
+with temp as (
+    select CATEGORY, max(PRICE) as MAX_PRICE, 
+        substring_index(group_concat(PRODUCT_NAME order by PRICE desc), ',', 1) as PRODUCT_NAME
+    from FOOD_PRODUCT
+    where CATEGORY regexp '과자|국|김치|식용유'
+    group by CATEGORY
+)
+
+select *
+from temp
+order by MAX_PRICE desc;
+
+select CATEGORY, group_concat(PRODUCT_NAME order by PRICE desc) as NAME
+from FOOD_PRODUCT
+where CATEGORY regexp '과자|국|김치|식용유'
+group by CATEGORY;
+
+
+
+
+
+
+
+
+
+
+# 식품분류별로 가격이 제일 비싼 식품의 분류, 가격, 이름 조회
+# 식품분류 - 과자 / 국 / 김치 / 식용유인 경우만 출력
+# 식품 가격을 기준으로 내림차순
+with tmp as (
+select CATEGORY, max(PRICE) as MAX_PRICE
+from FOOD_PRODUCT
+where CATEGORY IN ('식용유', '과자', '김치', '국')
+group by CATEGORY
+)
+select R.CATEGORY, T.MAX_PRICE, R.PRODUCT_NAME
+from tmp as T
+inner join FOOD_PRODUCT as R on T.CATEGORY = R.CATEGORY
+where T.MAX_PRICE = R.PRICE
+order by T.MAX_PRICE desc;
+
