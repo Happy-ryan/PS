@@ -75,3 +75,31 @@ select M.WRITER_ID, U.NICKNAME,
 from member M
 inner join USED_GOODS_USER U on M.WRITER_ID = U.USER_ID
 order by M.WRITER_ID desc;
+
+
+# 중고거래 3건 이상 등록한 사용자
+# 전체주소 - 시, 도로명 주소, 상세주소
+# 전화번호 - 하이픈 형식
+# 회원ID 내림차순 정렬
+
+with tmp as (
+    select WRITER_ID, count(*) as CNT
+    from USED_GOODS_BOARD
+    group by WRITER_ID
+    having CNT >= 3
+)
+
+select U.USER_ID,
+       U.NICKNAME,
+       concat(U.CITY, ' ', U.STREET_ADDRESS1, ' ', U.STREET_ADDRESS2) as 전체주소,
+       concat(
+           # substring(필드명, 시작위치(1base), 길이)
+           substring(U.TLNO, 1, 3),
+           '-',
+           substring(U.TLNO, 4, 4),
+           '-',
+           substring(U.TLNO, 8, 4)
+       ) as 전화번호
+from tmp as T
+inner join USED_GOODS_USER as U on T.WRITER_ID = U.USER_ID
+order by  U.USER_ID desc;
