@@ -29,3 +29,13 @@ from temp T
 inner join CAR_RENTAL_COMPANY_CAR C on T.CAR_ID = C.CAR_ID
 where C.CAR_TYPE = '세단'
 order by T.CAR_ID desc;
+
+
+# 자동차 종류 = 세단 / 10월에 대여 시작한 기록
+# 자동차ID 리스트에 중복 불가
+# 자동차ID 기준 내림차순 정렬
+select distinct(C.CAR_ID)
+from CAR_RENTAL_COMPANY_CAR as C
+inner join CAR_RENTAL_COMPANY_RENTAL_HISTORY as H on C.CAR_ID = H.CAR_ID
+where C.CAR_TYPE like '%세단%' and month(H.START_DATE) = 10
+order by C.CAR_ID desc;
