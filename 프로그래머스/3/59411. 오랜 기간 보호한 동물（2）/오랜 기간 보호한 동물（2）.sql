@@ -41,3 +41,32 @@ with temp as (
 select ANIMAL_ID, NAME
 from temp
 where temp.rn = 1 or temp.rn = 2;
+
+# 풀이2 limit
+with temp as (
+    select I.ANIMAL_ID, I.NAME
+    from ANIMAL_INS I
+    inner join ANIMAL_OUTS O on I.ANIMAL_ID = O.ANIMAL_ID
+    order by timestampdiff(day, I.DATETIME, O.DATETIME) + 1 desc
+    limit 2
+)
+
+select *
+from temp;
+
+
+
+
+
+# 입양을 간 동물 중 보호기간이 가장 길었던 동물 두 마리 = limit / row_number() 사용
+# 보호기간이 긴 순서로 조회
+with tmp as (
+select I.ANIMAL_ID, I.NAME,
+        row_number() over (order by timestampdiff(day, I.DATETIME, O.DATETIME) + 1 desc) AS rn
+from ANIMAL_INS AS I
+inner join ANIMAL_OUTS AS O on I.ANIMAL_ID = O.ANIMAL_ID
+order by timestampdiff(day, I.DATETIME, O.DATETIME) desc
+)
+select ANIMAL_ID, NAME
+from tmp
+where rn = 1 or rn = 2;
