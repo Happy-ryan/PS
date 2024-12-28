@@ -35,4 +35,19 @@ select T.APNT_NO, P.PT_NAME, T.PT_NO, T.MCDP_CD, D.DR_NAME, T.APNT_YMD
 from temp T
 inner join PATIENT P on T.PT_NO = P.PT_NO
 inner join DOCTOR D on T.MDDR_ID = D.DR_ID
-order by  T.APNT_YMD asc; 
+order by  T.APNT_YMD asc;
+
+
+
+# 2022년 4월 13일에 취소되지 않은 흉부외과(CS) 진료 예약 내역 조회
+# 진료예약번호, 환자이름, 환자번호, 진료과코드, 의사이름, 진료예약일시
+# 진료예약일시 기준 오름차순 정렬
+
+select A.APNT_NO, P.PT_NAME, P.PT_NO, D.MCDP_CD, D.DR_NAME, A.APNT_YMD
+from APPOINTMENT as A
+inner join DOCTOR as D on A.MDDR_ID = D.DR_ID
+inner join PATIENT as P on A.PT_NO = P.PT_NO
+where timestampdiff(day, '2022-04-13', A.APNT_YMD) = 0 and
+      D.MCDP_CD like 'CS' and
+      A.APNT_CNCL_YN = 'N'
+order by A.APNT_YMD	asc;
