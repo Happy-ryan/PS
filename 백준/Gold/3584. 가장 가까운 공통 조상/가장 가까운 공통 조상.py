@@ -1,54 +1,52 @@
-# https://www.acmicpc.net/problem/3584
 import sys
-
 sys.setrecursionlimit(10**5)
 
-
-def solution(n, edges, two_node):
-    radj = [[] for _ in range(n + 1)]
-    pars = set()
-    for edge in edges:
-        par, son = edge
-        pars.add(par)
-        radj[son].append(par)
-
-    inf = int(1e18)
-
-    def dfs(cur):
-        visited[cur] = True
-        prev.append(cur)
-
-        for nxt in radj[cur]:
-            if not visited[nxt]:
-                dfs(nxt)
-
-    prevs = []
-    for node in two_node:
-        visited = [False for _ in range(n + 1)]
-        prev = []
-        dfs(node)
-        prevs.append(prev)
-
-    frist_node_prev = list(reversed(prevs[0]))
-    second_node_prev = list(reversed(prevs[1]))
-
-    # print(frist_node_prev)
-    # print(second_node_prev)
-
-    # 두 노드의 공통조상 노드 뒤부터는 전부 동일할 것
-    # 공통조상이 4인데 4이후부터는 동일한 것 볼 수 있음!
-    # [3, 16, 10, 4, 8]
-    # [15, 6, 4, 8]
-    tmp = 0
-    while True:
-        if tmp >= min(len(frist_node_prev), len(second_node_prev)) or (frist_node_prev[tmp] != second_node_prev[tmp]):
-            return frist_node_prev[tmp - 1]
-        tmp += 1
-
-
 t = int(input())
+
+def solution(n, nodes, node1, node2):
+    # 트리 구성
+    adj = [[] for _ in range(n + 1)]
+    for a, b in nodes:
+        adj[a].append(b)
+    # 트리 문제 - par 배열
+    par = [0] * (n + 1)
+    for p, c in nodes:
+        par[c] = p
+        
+    
+    # par 배열을 활용하여 부모 찾기
+    node1_par = []
+    node2_par = []
+    def dfs(cur, node_par):
+        visited[cur] = True
+        
+        if not visited[par[cur]]:
+            dfs(par[cur], node_par)
+            node_par.append(par[cur])
+
+
+    # print(par)
+    visited = [False] * (n + 1)
+    dfs(node1, node1_par)
+    node1_par.append(node1)
+    # print(node1_par)
+    visited = [False] * (n + 1)
+    dfs(node2, node2_par)
+    node2_par.append(node2)
+    # print(node2_par)
+    
+    l = min(len(node1_par), len(node2_par))
+    lca = 0
+    for idx in range(l):
+        if node1_par[idx] == node2_par[idx]:
+            lca = node1_par[idx]
+            
+    return lca
+    
+
 for _ in range(t):
     n = int(input())
-    edges = [list(map(int, input().split())) for _ in range(n - 1)]
-    two_node = list(map(int, input().split()))
-    print(solution(n, edges, two_node))
+    nodes = [list(map(int, input().split())) for _ in range(n - 1)]
+    node1, node2 = map(int, input().split())
+    print(solution(n, nodes, node1, node2))
+    
