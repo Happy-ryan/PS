@@ -1,0 +1,47 @@
+-- 코드를 입력하세요
+SELECT PRODUCT_ID, PRODUCT_NAME, PRODUCT_CD, CATEGORY, PRICE
+FROM FOOD_PRODUCT
+ORDER BY PRICE DESC
+LIMIT 1;
+
+
+SELECT PRODUCT_ID, PRODUCT_NAME, PRODUCT_CD, CATEGORY, PRICE
+FROM FOOD_PRODUCT
+WHERE PRICE = (
+    SELECT MAX(PRICE)
+    FROM FOOD_PRODUCT
+);
+
+
+# window, limit, 집계함수!
+with temp as (
+    select max(price) as PRICE
+    from FOOD_PRODUCT
+), temp2 as (
+    select PRODUCT_ID, PRICE,
+        row_number() over (order by PRICE desc) as rn
+    from FOOD_PRODUCT
+), temp3 as (
+    select PRODUCT_ID, PRICE
+    from FOOD_PRODUCT
+    order by PRICE desc
+)
+
+select *
+from temp3;
+
+SELECT PRODUCT_ID, PRODUCT_NAME, PRODUCT_CD, CATEGORY, PRICE
+FROM FOOD_PRODUCT
+WHERE PRICE = (
+    SELECT MAX(PRICE)
+    FROM FOOD_PRODUCT
+);
+
+
+select PRODUCT_ID, PRODUCT_NAME, PRODUCT_CD, CATEGORY, PRICE
+from FOOD_PRODUCT
+where PRICE = (
+    select MAX(PRICE)
+    from FOOD_PRODUCT
+);
+
