@@ -26,3 +26,16 @@ with temp as (
 select USER_ID, PRODUCT_ID
 from temp
 order by USER_ID asc, PRODUCT_ID desc;
+
+
+# 동일한 회원이 동일한 상품을 재구매!!  > 회원 / 아이디 묶고 > 다른 행의 수로 재구매 판단!
+with tmp as (
+    select USER_ID, PRODUCT_ID, count(ONLINE_SALE_ID) as count
+    from ONLINE_SALE
+    group by USER_ID, PRODUCT_ID
+    having count > 1
+    order by USER_ID asc, PRODUCT_ID desc
+)
+
+select USER_ID, PRODUCT_ID
+from tmp;
