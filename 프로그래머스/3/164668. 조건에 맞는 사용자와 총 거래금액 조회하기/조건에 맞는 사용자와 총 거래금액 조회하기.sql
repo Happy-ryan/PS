@@ -58,4 +58,20 @@ with done as (
 select U.USER_ID, U.NICKNAME, D.TOTAL_PRICE
 from done as D
 left join USED_GOODS_USER as U on D.WRITER_ID = U.USER_ID
-order by D.TOTAL_PRICE asc
+order by D.TOTAL_PRICE asc;
+
+
+# 완료된 중고거래 / 유저별 !! 총 금액 70민원 이상 / 총 거래금액 기준 오름차순
+with tmp as (
+    select B.WRITER_ID, sum(PRICE) as TOTAL_SALES
+    from USED_GOODS_BOARD as B
+    left join USED_GOODS_USER as U on B.WRITER_ID = U.USER_ID
+    where B.STATUS = 'DONE'
+    group by B.WRITER_ID
+    having TOTAL_SALES >= 700000
+    order by TOTAL_SALES asc
+)
+
+select U.USER_ID, U.NICKNAME, T.TOTAL_SALES
+from tmp as T
+inner join USED_GOODS_USER as U on T.WRITER_ID = U.USER_ID;
