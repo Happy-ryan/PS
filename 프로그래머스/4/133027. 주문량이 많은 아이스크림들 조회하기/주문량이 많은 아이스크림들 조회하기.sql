@@ -69,3 +69,42 @@ select FLAVOR
 from temp2
 order by TOTAL_ORDER desc
 limit 3;
+
+with temp as (
+    select FLAVOR, sum(TOTAL_ORDER) as TOTAL_ORDER
+    from FIRST_HALF
+    group by FLAVOR
+
+    union all
+
+    select FLAVOR, sum(TOTAL_ORDER) as TOTAL_ORDER
+    from JULY
+    group by FLAVOR
+)
+
+select *
+from temp;
+
+# 7월의 아이스크림 총 주문량과 상반기의 아이스크름 총 주문량을 더한 값이 큰 순서대로 상위 3개의 맛 조회
+# 테이블을 합쳐야함 > 테이블 자체를 다룰 때 union all / union / intersect
+with tmp as (
+    select FLAVOR, sum(TOTAL_ORDER) as TOTAL_ORDER
+    from FIRST_HALF
+    group by FLAVOR
+    
+    union all
+    
+    select FLAVOR, sum(TOTAL_ORDER) as TOTAL_ORDER
+    from JULY
+    group by FLAVOR
+), tmp2 as (
+    select FLAVOR, sum(TOTAL_ORDER) as TOTAL_ORDER
+    from tmp
+    group by FLAVOR
+    order by TOTAL_ORDER desc
+)
+
+select FLAVOR
+from tmp2
+limit 3;
+
