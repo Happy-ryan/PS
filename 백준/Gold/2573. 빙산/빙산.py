@@ -10,6 +10,11 @@ def solution(n, m, board):
     # 1. 물들이 존재하는 좌표들 찾기
     # 2. 빙하 녹이기
     # 빙하 덩어리와 물들의 좌표를 찾는 방법 > bfs / dfs
+    # * 시간초과 해결
+    # 물 -> 빙하(물이 빙하를 녹인다): 물의 좌표가 필요하고 이는 물도 bfs를 진행해야함 > 빙하 그리고 물 모두 bfs 돌리게 된다. > 시간초과
+    # 빙하 <- 물(빙하가 물의 영향을 받는다): 빙하의 좌표만 구하면 내 주변에 물이 있는지 확인하면 얼마나 녹을지 계산가능함 > 따라서 빙하의 좌표만 필요하므로 빙하 bfs만 돌리게 된다 > 시간초과해결
+    # * 녹는다
+    # 한 번에 녹여야한다. 새로운 테이블에 영향을 따로 기록해야함. 이런 꽤 있음. 영향을 즉각적으로 반영하면 반복문 돌면서 원본이 변경되어서 이상해짐.
     
     dr = [-1, 1, 0, 0]
     dc = [0, 0, -1, 1]
@@ -17,38 +22,6 @@ def solution(n, m, board):
     
     def in_range(r, c):
         return 0 <= r < n and 0 <= c < m
-    
-    
-    def find_water():
-        # 찾을 때마다 갱신
-        visited = [[False for _ in range(m)] for _ in range(n)]
-        
-        water_grid = []
-        
-        def bfs(r, c):
-            dq = deque([])
-            
-            dq.append((r, c))
-            visited[r][c] = True
-            water_grid.append((r, c))
-            
-            while dq:
-                cr, cc = dq.popleft()
-                for k in range(4):
-                    nr = cr + dr[k]
-                    nc = cc + dc[k]
-                    if in_range(nr,nc) and board[nr][nc] == 0 and not visited[nr][nc]:
-                        dq.append((nr, nc))
-                        visited[nr][nc] = True
-                        water_grid.append((nr, nc))
-                
-        for r in range(n):
-            for c in range(m):
-                if visited[r][c] or board[r][c] != 0:
-                    continue
-                bfs(r, c)
-        
-        return water_grid
             
     # 녹일 때 주의점은 한 방에 녹여야한다!
     # 찔끔찔끔 녹이면 높이가 0이 되는 지점에서 문제가 발생하게 된다!
