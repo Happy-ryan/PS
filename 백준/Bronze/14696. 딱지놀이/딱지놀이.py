@@ -10,8 +10,8 @@ for i in range(2 * n):
 from collections import Counter
 
 def solution(arr, brr):
-    arr = Counter(arr)
-    brr = Counter(brr)
+    arr = Counter(arr[1:])
+    brr = Counter(brr[1:])
 
     for i in range(1, 5):
         if i not in arr:
