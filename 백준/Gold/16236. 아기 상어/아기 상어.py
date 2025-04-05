@@ -6,7 +6,7 @@
 # 거리 동일 물고기 -> 1순위-위 / 2순위 -왼쪽
 
 # 이동 시간 1초
-# 물고기 섭취 시 빈칸 -> 크기만큼 섭취하면 크기 증가
+# 물고기 섭취 시 빈칸 -> 섭취하면 크기 증가
 
 # 엄마상어한테 요청하지 않고 잡아먹을 수 있는 시간
 
@@ -68,7 +68,6 @@ def solution(n, board):
     
     def eat_fish(fishes):
         # dist >= inf 도달 불가!!
-        # 물고기의 크기는 6까지..!!! > 상어의 크기가 커지다보면 9을 넘어서게 되는데 이때 자신을 먹는 문제 발생!
         for fish in fishes:
             dist, i, j = fish
             if dist < inf:
@@ -78,6 +77,8 @@ def solution(n, board):
         return inf, inf, inf
     
     def find_shark():
+        # 물고기의 크기가 10이 되면 상어 자기자신도 물고기 후보에 포함
+        # 따라서 자기 자신을 먹어서 board 상에 '9'가 존재하지 않음.
         for i in range(n):
             for j in range(n):
                 if board[i][j] == 9:
@@ -85,37 +86,23 @@ def solution(n, board):
                 
     time = 0
     cnt = 0
-    x = 0
     while True:
-        # print(f"===1. 먹기 전 상태 : {x}초 / 처음 이동할 때 상어의 크기 : {shark}")
-        # for row in board:
-        #     print(*row)
         s_i, s_j = find_shark()
-        # print(f"===2. 상어 위치 : {s_i} {s_j}")
         fishes = find_closest_fish(s_i, s_j)
-        # print(f"물고기 후보: {fishes}")
+        # 후보 물고기 없음
         if not fishes:
-            # print("먹을 물고기 후보가 없습니다. 엄마 상어를 호출합니다. +시스템종료+")
             break
+        # 후보 물고기가 있는데 도달불가능
         dist, i, j = eat_fish(fishes)
         if dist == inf:
-            # print("먹을 물고기 후보가 없습니다. 엄마 상어를 호출합니다. +시스템종료+")
             break
         time += dist
-        # print(f"===3-1. 먹을 물고기 거리 : {dist}")
-        # print(f"===3-2. 위치 : {i} {j}")
         board[s_i][s_j] = 0
         cnt += 1
-        # print(f"4-1. 먹은 물고기 수 : {cnt} / 먹기 전 크기 : {shark}")
+        # 크기만큼 먹으면 상어 크기 +1 / 먹은양 초기화
         if shark == cnt:
             shark += 1
             cnt = 0
-        # print(f"4-2. 먹은 후 상어의 크기 : {shark}")
-        # print(f"===4. 먹은 후 상태 : {x + 1}초")
-        # for row in board:
-        #     print(*row)
-        # print(f"+++++++{x} : 한 턴 종료+++++++")
-        x += 1
     
     return time
 
