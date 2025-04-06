@@ -7,6 +7,7 @@ def solution(n, q, par_node, qs):
     # x c d : x = 1, c와 d가 연결이 되어있는가?
     
     par = [-1] * (n + 1)
+    sizes = [1] * (n + 1)
     
     def find(x):
         if par[x] == -1:
@@ -24,16 +25,20 @@ def solution(n, q, par_node, qs):
         if x == y:
             return False
         
+        if sizes[x] < sizes[y]:
+            x, y = y, x
+            
         par[y] = x
+        sizes[x] += sizes[y]
         
         return True
     
     ans = []
     for q in qs[::-1]:
         if q[0] == 0:
-            b = q[1]
+            _, b = q
             par_b = par_node[b]
-            union(b, par_b)
+            union(par_b, b)
         else:
             _, c, d = q
             if find(c) == find(d):
