@@ -2,6 +2,15 @@
 # 단어의 길이 100이하
 # Max 접두사의 개수 = 20,000 * 100 = 2,000,0000
 
+# 반례 찾음... > 접두사가 아니고 그냥 포함된 상태인데 그걸 체크해버리는 경우!!
+# 3
+# abcd
+# bcde
+# bcdf
+# ['bcd']
+# abcd
+# bcde
+
 n = int(input())
 words = [input() for _ in range(n)]
 
@@ -36,21 +45,15 @@ def solution(n, words):
             tmp.append((k))
     
     # print(tmp)
-    # 반례 찾음... > 접두사가 아니고 그냥 포함된 상태인데 그걸 체크해버리는 경우!!
-    # 3
-    # abcd
-    # bcde
-    # bcdf
-    # ['bcd']
-    # abcd
-    # bcde
     cnt = 0
     if tmp:
+        # 입력 순서 기준!
         x = tmp[0]
         # 서로 다른 영단어 제시되므로 같은 것 출력 안돼.
         for word in words:
             if cnt == 2:
                 return
+            # if x in word: <- 틀린 이유
             if x in make_prefix(word):
                 print(word)
                 cnt += 1
