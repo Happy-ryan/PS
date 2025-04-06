@@ -8,26 +8,27 @@ def solution(n, d, k, c, sushis):
     
     max_sushi = 0
     
+    # 슬라이딩 윈도우 써보기...
     dic = Counter()
-    idx = 0
-    while idx < n:
-        if idx == 0:
-            for i in range(idx, idx + k):
-                dic[sushis[i]] += 1
-        else:
-            dic[sushis[idx - 1]] -= 1
-            if dic[sushis[idx - 1]] == 0:
-                dic.pop(sushis[idx - 1])
-            dic[sushis[idx + k - 1]] += 1
+    for i in range(k):
+        dic[sushis[i]] += 1
+    
+    for i in range(n):
         
-        # print(f"idx: {idx}, sushi: {dic}")
+        # 초밥개수 <- 밖에서 초기 window 셋팅
+        cnt = len(dic)
+        if c not in dic:
+            cnt += 1
+            
+        # 답 갱신    
+        max_sushi = max(max_sushi, cnt)
         
-        if c in dic:
-            max_sushi = max(max_sushi, len(dic.keys()))
-        else:
-            max_sushi = max(max_sushi, len(dic.keys()) + 1)
+        # 다음 window 셋팅
+        dic[sushis[i]] -= 1
+        if dic[sushis[i]] == 0:
+            dic.pop(sushis[i])
+        dic[sushis[i + k]] += 1
         
-        idx += 1
 
     return max_sushi
 
