@@ -1,56 +1,41 @@
 n = int(input())
 balls = list(input())
 
+# RBBBBBBBBRRRRRRRRB
+
 def solution(n, balls):
     # 그리디 - 빨간색끼리 / 파란색끼리..
     
-    # 최대 이동 수 = 선택한 색의 공의 전체 수.
+    # case1 - 왼(R) / 오(B) * R 이동
+    # case2 - 왼(R) / 오(B) * B 이동
+    # case3 - 왼(B)) / 오(R) * R 이동
+    # case4 - 왼(B) / 오(R) * B 이동
+    # 총 4가지 case로 구성.
     
-    # 'R'RRRR...RRB.....'B'
-    # 한 쪽은 파란색 / 한 쪽은 빨간색
+    def case1(mode):
+        cnt = 0
+        for ball in balls:
+            if ball == mode:
+                cnt += 1
+            else:
+                break
+        return balls.count(mode) - cnt
+
+    def case2(mode):
+        cnt = 0
+        for ball in balls[::-1]:
+            if ball == mode:
+                cnt += 1
+            else:
+                break
+        return balls.count(mode) - cnt
     
-    # case1. R - B / B - R
-    # min(R, B)
     
-    # case2. R - R / B - B
-    # R - R ... 반드시 R 선택! R[R의 수1] ~ [R의수 3] ~ [R의 수 2]R
-    # min(R1, R2) + R3
+    c1 = case1('R')
+    c2 = case1('B')
+    c3 = case2('R')
+    c4 = case2('B')
     
-    # B BRBBBB R
-    
-    def check(mode):
-        # case1
-        if balls[0] != balls[-1]:
-            cnt = balls.count(mode)
-            return min(cnt - 1, n -cnt - 1)
-        
-        if balls[0] == balls[-1]:
-            cnt1 = 0
-            for i in range(n):
-                if balls[i] == mode:
-                    cnt1 += 1
-                else:
-                    break
-            cnt3 = 0
-            for i in range(n - 1, -1, -1):
-                if balls[i] == mode:
-                    cnt3 += 1
-                else:
-                    break
-                    
-            cnt2 = balls.count(mode) - cnt1 - cnt3
-            
-            # print("왼", cnt1)
-            # print("중", cnt2)
-            # print("오", cnt3)
-            return cnt2 + min(cnt1, cnt3)
-        
-    red = check('R')
-    blue = check('B')
-    
-    # print(red)
-    # print(blue)
-    
-    return min(red, blue)
-    
+    return min(c1, c2, c3, c4)
+
 print(solution(n, balls))
