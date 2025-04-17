@@ -34,13 +34,15 @@ order by SALES_DATE, PRODUCT_ID, USER_ID;
 
 
 with temp as (
-    select date_format(SALES_DATE, '%Y-%m-%d') as SALES_DATE, PRODUCT_ID, USER_ID, SALES_AMOUNT
+    select date_format(SALES_DATE, '%Y-%m-%d') as SALES_DATE,
+            PRODUCT_ID, USER_ID, SALES_AMOUNT
     from ONLINE_SALE
     where year(SALES_DATE) = 2022 and month(SALES_DATE) = 3
     
     union all
     
-    select date_format(SALES_DATE, '%Y-%m-%d') as SALES_DATE, PRODUCT_ID, null, SALES_AMOUNT
+    select date_format(SALES_DATE, '%Y-%m-%d') as SALES_DATE,
+            PRODUCT_ID, null as USER_ID, SALES_AMOUNT
     from OFFLINE_SALE
     where year(SALES_DATE) = 2022 and month(SALES_DATE) = 3
 )
@@ -49,9 +51,19 @@ select *
 from temp
 order by SALES_DATE asc, PRODUCT_ID	 asc, USER_ID asc;
 
+# 2022년 3월 오프라인/온라인 상품 판매 데이터의 판매날짜, 상품ID, 유저ID, 판매량
+# user_id 는 null
+# 판매일 asc, 상품ID asc, 유저ID asc
 
+# 온 + 오프라인 테이블 합침 > intersect / union / union all
+select date_format(SALES_DATE, '%Y-%m-%d') as SALES_DATE, PRODUCT_ID, USER_ID, SALES_AMOUNT
+from ONLINE_SALE
+where year(SALES_DATE) = 2022 and month(SALES_DATE) = 3
 
+union all
 
+select date_format(SALES_DATE, '%Y-%m-%d') as SALES_DATE, PRODUCT_ID, null, SALES_AMOUNT
+from OFFLINE_SALE
+where year(SALES_DATE) = 2022 and month(SALES_DATE) = 3
 
-
-
+order by SALES_DATE asc, PRODUCT_ID	 asc, USER_ID asc;
