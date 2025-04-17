@@ -39,3 +39,12 @@ with tmp as (
 
 select USER_ID, PRODUCT_ID
 from tmp;
+
+# '재구매'한 데이터 분석 > 재구매한 회원ID . 재구매 상품 ID 
+# 회원 ID 기준 오름차순 / 상품ID 기준 내림차순
+# 재구매를 어케 판단할 것 인가? > count 활용
+select USER_ID, PRODUCT_ID
+from ONLINE_SALE
+group by USER_ID, PRODUCT_ID
+having count(*) > 1
+order by USER_ID asc, PRODUCT_ID desc
