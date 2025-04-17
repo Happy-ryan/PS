@@ -11,3 +11,22 @@ order by DATETIME asc
 limit 1;
 
 
+# 윈도우함수
+with temp as (
+    select NAME,
+        row_number() over (order by DATETIME asc) as rn
+    from ANIMAL_INS
+)
+
+select NAME
+from temp
+where temp.rn = 1;
+
+# 상위 n개..-> limit / 윈도우함수.
+
+select T.NAME
+from
+( select NAME, row_number() over (order by DATETIME asc) as rn
+ from ANIMAL_INS
+) as T
+where T.rn = 1;
