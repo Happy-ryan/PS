@@ -19,7 +19,8 @@
 select H.FLAVOR
 from FIRST_HALF AS H
 left join ICECREAM_INFO AS I ON H.FLAVOR = I.FLAVOR
-where H.TOTAL_ORDER >= 3000 and I.INGREDIENT_TYPE = 'fruit_based';
+where H.TOTAL_ORDER > 3000 and I.INGREDIENT_TYPE = 'fruit_based'
+order by H.TOTAL_ORDER desc;
 
 
 
@@ -31,6 +32,11 @@ where H.TOTAL_ORDER >= 3000 and I.INGREDIENT_TYPE = 'fruit_based';
 
 
 
+# 상반기 아이스크림 총 주문양 > 3000 & 아이스크림 주성분 = 과일
+# 총주문량 내림차순
 
-
-
+select H.FLAVOR
+from FIRST_HALF as H
+left join ICECREAM_INFO as I on H.FLAVOR = I.FLAVOR
+where H.TOTAL_ORDER > 3000 and I.INGREDIENT_TYPE = 'fruit_based'
+order by H.TOTAL_ORDER desc
