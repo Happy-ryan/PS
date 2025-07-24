@@ -1,4 +1,11 @@
 -- 코드를 입력하세요
+select B.TITLE, B.BOARD_ID, R.REPLY_ID, R.WRITER_ID, R.CONTENTS,
+        date_format(B.CREATED_DATE, '%Y-%m-%d') as  CREATED_DATE
+from USED_GOODS_BOARD as B 
+inner join USED_GOODS_REPLY as R on B.BOARD_ID = R.BOARD_ID
+where year(B.CREATED_DATE) = 2022 and month(B.CREATED_DATE) = 10
+order by R.CREATED_DATE asc, B.CREATED_DATE asc;
+
 -- R.WRITER_ID, R.CONTENTS 어디에서 테이블에서 가져오는지 정확하게 따져야함
 -- 여기선 R테이블의 WRITER_ID과 CONTENTS를 가져오므로 이 부분을 주의해야한다.
 SELECT B.TITLE, B.BOARD_ID, R.REPLY_ID, R.WRITER_ID, R.CONTENTS,
