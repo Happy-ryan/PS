@@ -1,3 +1,28 @@
+# 서울에 위치한 식당 ID,이름...
+# 리뷰 평균점수 세수점 세번째 자리에서 반올림 = 2자리까지 표시
+# 평균점수 내림차순 -> 즐겨찾기 내림차순
+
+select T.REST_ID, T.REST_NAME, T.ADDRESS, round(avg(R.REVIEW_SCORE), 2) as REVIEW_SCORE
+from REST_INFO as T 
+join REST_REVIEW as R on T.REST_ID = R.REST_ID
+where T.ADDRESS like '서울특별시%'
+order by R.REVIEW_SCORE desc, T.FAVORITES desc;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 SELECT I.REST_ID, I.REST_NAME, I.FOOD_TYPE, I.FAVORITES, I.ADDRESS,
         ROUND(AVG(REVIEW_SCORE), 2) AS SCORE
 FROM REST_INFO I
