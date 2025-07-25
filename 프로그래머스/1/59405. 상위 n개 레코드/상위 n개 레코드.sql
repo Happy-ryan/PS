@@ -24,9 +24,23 @@ where temp.rn = 1;
 
 # 상위 n개..-> limit / 윈도우함수.
 
-select T.NAME
+select NAME
 from
 ( select NAME, row_number() over (order by DATETIME asc) as rn
  from ANIMAL_INS
 ) as T
 where T.rn = 1;
+
+
+# 상위 n개 찾는 방법 -> 윈도우 함수 or limit 
+# 1) limit
+with tmp1 as
+    (
+    select NAME
+    from ANIMAL_INS
+    order by DATETIME asc
+    limit 1
+    )
+    
+select *
+from tmp1;
