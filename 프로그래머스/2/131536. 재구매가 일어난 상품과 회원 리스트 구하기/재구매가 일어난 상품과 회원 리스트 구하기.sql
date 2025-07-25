@@ -1,14 +1,4 @@
 -- 코드를 입력하세요
-# 이 문제 포인트 : 재구매
-# 회원id, 재구매상품id
-# 회원id 오름차순 / 상품id 내림차순
-
-select USER_ID, PRODUCT_ID
-from ONLINE_SALE
-group by USER_ID
-having count(PRODUCT_ID) > 1
-order by USER_ID asc, PRODUCT_ID desc;
-
 
 SELECT USER_ID,	PRODUCT_ID
 FROM ONLINE_SALE
@@ -58,4 +48,16 @@ select USER_ID, PRODUCT_ID
 from ONLINE_SALE
 group by USER_ID, PRODUCT_ID
 having count(*) > 1
-order by USER_ID asc, PRODUCT_ID desc
+order by USER_ID asc, PRODUCT_ID desc;
+
+
+# 이 문제 포인트 : 재구매
+# 회원id, 재구매상품id
+# 회원id 오름차순 / 상품id 내림차순
+# 특정한 사람이 특정 상품에 대한 구매 횟수를 파악
+# 사람(group by) / 상풍(group by)
+select USER_ID, PRODUCT_ID as PD
+from ONLINE_SALE
+group by USER_ID, PRODUCT_ID
+having count(PRODUCT_ID) > 1
+order by USER_ID asc, PRODUCT_ID desc;
