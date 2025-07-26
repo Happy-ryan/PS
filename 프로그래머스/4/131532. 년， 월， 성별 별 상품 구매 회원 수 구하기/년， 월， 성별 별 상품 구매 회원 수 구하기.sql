@@ -25,3 +25,34 @@ from USER_INFO I
 inner join ONLINE_SALE S on I.USER_ID = S.USER_ID
 where I.GENDER	is not null
 group by YEAR, MONTH, I.GENDER;
+
+# 년, 월, 성별별로 구매한 회왼수 집계
+# 년, 월, 성별 기준 오름차순
+# 성별정보 없으면 제외
+
+select year(SALES_DATE) as year, month(SALES_DATE) as month, gender, count(distinct S.USER_ID) as users
+from ONLINE_SALE as S
+inner join USER_INFO as I on I.USER_ID = S.USER_ID
+where I.gender is not null
+group by year, month, gender
+order by year, month, gender;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
