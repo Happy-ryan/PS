@@ -74,3 +74,16 @@ with tmp as (
 select FOOD_TYPE, REST_ID, REST_NAME, FAVORITES
 from tmp
 where rn = 1;
+
+
+# 풀이1) 윈도우함수
+with tmp as (
+    select row_number() over (partition by FOOD_TYPE order by FAVORITES desc) as rn,
+           FOOD_TYPE, REST_ID, FAVORITES, REST_NAME
+    from REST_INFO
+)
+
+select FOOD_TYPE, REST_ID, REST_NAME, FAVORITES
+from tmp
+where rn = 1
+order by FOOD_TYPE desc;
