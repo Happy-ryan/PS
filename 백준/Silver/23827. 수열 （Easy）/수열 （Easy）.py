@@ -3,9 +3,12 @@ nums = list(map(int, input().split()))
 
 
 def solution(n, nums):
-    # 모든 쌍의 개수이므로 순서는 무관함.
+    # 모든 쌍의 개수이므로 순서는 무관함. > 정렬
     nums.sort()
     mod = 1000000007
+    
+    # 500,000이므로 모든 경우의 수를 구하면 시간초과난다!! 누적합이 필요함
+    
     # x1 x2 x3 x4
     # x1 * x2 + x1 * x3 + x1 * x4
     # x2 * x3 + x2 * x4
