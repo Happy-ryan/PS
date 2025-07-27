@@ -108,3 +108,22 @@ select FLAVOR
 from tmp2
 limit 3;
 
+# 7월 아이스크림 총 주문량과 상반기 아이스크림 총 주문량 더 한 값이 큰 순서대로 상위 3개의 맛
+
+with tmp as (
+    select FLAVOR, sum(TOTAL_ORDER) as total_order
+    from FIRST_HALF
+    group by FLAVOR
+    
+    union all
+    
+    select FLAVOR, sum(TOTAL_ORDER) as TOTAL_ORDER
+    from JULY
+    group by FLAVOR
+)
+
+select FLAVOR
+from tmp
+group by flavor
+order by sum(TOTAL_ORDER) desc
+limit 3;
