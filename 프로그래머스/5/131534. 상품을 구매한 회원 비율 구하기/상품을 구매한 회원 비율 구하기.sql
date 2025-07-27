@@ -33,7 +33,7 @@ order by T.YEAR asc, T.MONTH asc;
 # 두번째반올림(round(1)) /년도기준 
 
 with total as (
-    select count(*) as COUNT
+    select count(USER_ID) as COUNT
     from USER_INFO
     where year(JOINED) = 2021
 ), member as (
@@ -53,3 +53,29 @@ with total as (
 select M.YEAR, M.MONTH, M.COUNT as PUCHASED_USERS, 
         round(M.COUNT / T.COUNT,1) as PUCHASED_RATIO
 from member M, total T;
+
+
+# 2021년에 가입한 전체 회원 - 상품 구매한 회원 수와 상품 구매한 회원의 비울을 년, 월 별로 출력
+# 소수 두 번째 자리에서 반올림 / 년 기준 오름차순 / 월 기준 오름차순
+
+# 1) 21년에 '구매한' 회원 및 구매 횟수
+with member as (
+    select year(O.SALES_DATE) as year,
+           month(O.SALES_DATE) as month,
+           count(distinct O.USER_ID) as PURCHASED_USERS # sum이 아니다..row 찾는거니까 count가 맞다
+    from USER_INFO as I
+    inner join ONLINE_SALE as O on I.USER_ID = O.USER_ID
+    where  year(I.JOINED) = 2021
+    group by year, month
+),
+# 2) 21년에 가입한 총 회원 수
+total as (
+    select count(USER_ID) as total # row수 찾는건 count!!
+    from USER_INFO
+    where year(JOINED) = 2021
+)
+
+select M.year, M.month, M.purchased_users,
+        round(M.purchased_users / T.total, 1) as PUCHASED_RATIO
+from member as M, total as T
+order by M.year asc, M.month asc;

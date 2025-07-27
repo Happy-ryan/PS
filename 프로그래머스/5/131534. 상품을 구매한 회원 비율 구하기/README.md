@@ -16,7 +16,7 @@ Empty
 
 ### 제출 일자
 
-2024년 03월 02일 11:42:56
+2025년 07월 27일 22:48:18
 
 ### 문제 설명
 
@@ -252,7 +252,7 @@ Empty
         <thead><tr>
 <th>YEAR</th>
 <th>MONTH</th>
-<th>PUCHASED_USERS</th>
+<th>PURCHASED_USERS</th>
 <th>PUCHASED_RATIO</th>
 </tr>
 </thead>
