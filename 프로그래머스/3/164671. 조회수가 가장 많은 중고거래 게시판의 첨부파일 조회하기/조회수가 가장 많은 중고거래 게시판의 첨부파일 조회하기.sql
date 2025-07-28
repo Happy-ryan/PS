@@ -85,3 +85,22 @@ from tmp AS T
 right join USED_GOODS_FILE AS F on T.BOARD_ID = F.BOARD_ID
 where T.rn = 1
 order by F.FILE_ID desc;
+
+
+# 조회수가 가장 높은 중고거래 게시물에 대한 첨부파일 경로 조회
+# file id 기준 내림차순
+# 조회수가 높은 게시물은 하나만 존재
+
+# 1) 가장 조회수가 높은 게시물 추출
+with tmp as (
+    select B.BOARD_ID, B.VIEWS,
+        F.FILE_ID, F.FILE_EXT, F.FILE_NAME,
+    rank() over (order by B.VIEWS desc) as rn
+    from USED_GOODS_BOARD as B
+    right outer join USED_GOODS_FILE as F on B.BOARD_ID = F.BOARD_ID
+)
+
+select concat('/home/grep/src/', BOARD_ID,'/', FILE_ID, FILE_NAME, FILE_EXT) as FILE_PATH
+from tmp
+where rn = 1
+order by FILE_ID desc;
