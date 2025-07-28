@@ -1,35 +1,27 @@
 n = int(input())
-nums = list(map(int, input().split()))
+arr = list(map(int, input().split()))
 
-
-def solution(n, nums):
-    # 모든 쌍의 개수이므로 순서는 무관함. > 정렬
-    nums.sort()
+def solution(n, arr):
+    # 정렬해도 아무 이슈 없음.
+    arr.sort()
+    
+    # 이중 포문하면 시간초과 발생함..
+    # 500,000 * 250,000
     mod = 1000000007
+    # 시간초과 해결 : 이분탐색 / 투포인터 / 누적합 / 우선순위 큐 
+    # 쌍을 결정하는 문제 - 하나 고정하고 생각...
     
-    # 500,000이므로 모든 경우의 수를 구하면 시간초과난다!! 누적합이 필요함
+    psum = [0] * (n + 1)
+    for i in range(1, n + 1):
+        psum[i] = psum[i - 1] + arr[i - 1]
     
-    # x1 x2 x3 x4
-    # x1 * x2 + x1 * x3 + x1 * x4
-    # x2 * x3 + x2 * x4
-    # x3 * x4
-    # = x1 (x2 + x3 + x4) + x2 (x3 + x4) + x3 (x4)
-    # 인덱스 x 의 숫자 * (인덱스 x + 1 ~ 끝까지의 누적합)
-    # 반드시 끝이 들어가므로 반대방향 누적합을 하는게 적절해보인다.
-    # psum[i]의 정의
-    # 1 2 3
-    # 5 3 0
-    # psum[1] = psum[2] + nums[2]
-    # psum[0] = psum[1] + nums[1]
-    psum = [0] * n
-    for i in range(n - 2, -1, -1):
-        psum[i] = psum[i + 1] + nums[i + 1]
+    res = 0
+    for r in range(n - 1, 0, -1):
+        res += (arr[r] * psum[r]) % mod
+        # print(arr[r], psum[r])
+    
+    # +한 값이 mod를 넘을 수 있음!! 주의
+    return res % mod
+    
 
-    ans = 0
-    for i in range(n):
-        ans += (nums[i] * psum[i]) % mod
-
-    return ans % mod
-
-
-print(solution(n, nums))
+print(solution(n, arr))
