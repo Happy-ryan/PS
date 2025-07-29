@@ -51,3 +51,37 @@ where timestampdiff(day, '2022-04-13', A.APNT_YMD) = 0 and
       D.MCDP_CD like 'CS' and
       A.APNT_CNCL_YN = 'N'
 order by A.APNT_YMD	asc;
+
+
+# 2022년 4월 13일 취소되지 않는 흉부외과(CS) 진료 예약 내역 조회
+# 진료예약일시 기준 오름차순
+
+with tmp as (
+    select  A.APNT_NO,
+            P.PT_NAME,
+            P.PT_NO,
+            A.MCDP_CD,
+            D.DR_NAME,
+            A.APNT_YMD
+    from APPOINTMENT as A
+    inner join DOCTOR as D on A.MDDR_ID = D.DR_ID
+    inner join PATIENT as P on A.PT_NO = P.PT_NO
+    where A.MCDP_CD = 'CS' and A.APNT_CNCL_YN = 'N' and
+        year(A.APNT_YMD) = 2022 and month(A.APNT_YMD) = 4 and day(A.APNT_YMD) = 13
+)
+
+select *
+from tmp
+order by APNT_YMD asc;
+
+
+
+
+
+
+
+
+
+
+
+
