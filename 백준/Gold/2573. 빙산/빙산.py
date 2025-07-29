@@ -4,85 +4,88 @@ board = [list(map(int, input().split())) for _ in range(n)]
 from collections import deque
 
 def solution(n, m, board):
-    inf = int(1e18)
+    
+    
     dr = [-1, 1, 0, 0]
     dc = [0, 0, -1, 1]
     
     def in_range(r, c):
-        return 0 <= r < n and 0 <= c < m 
-    
+        return 0 <= r < n and 0 <= c < m
+
+    # ice 그룹 수 및 좌표 -> 나머지 좌표가 waters가 된다.
+    # 따라서 ices를 구하는게 더 합리적.
     def find_ice():
+        ices = []
         
         in_queue = [[False for _ in range(m)] for _ in range(n)]
         
         def bfs(r, c):
+            ice = []
+            
             dq = deque([])
-            grid = []
             dq.append((r, c))
+            ice.append((r, c))
             in_queue[r][c] = True
-            grid.append((r, c))
             
             while dq:
                 cr, cc = dq.popleft()
-                for d in range(4):
-                    nr = cr + dr[d]
-                    nc = cc + dc[d]
+                for k in range(4):
+                    nr = cr + dr[k]
+                    nc = cc + dc[k]
                     if in_range(nr, nc) and not in_queue[nr][nc] and board[nr][nc] != 0:
                         dq.append((nr, nc))
+                        ice.append((nr, nc))
                         in_queue[nr][nc] = True
-                        grid.append((nr, nc))
-            return grid
-                        
-        ice_groups = []
-        for i in range(n):
-            for j in range(m):
-                if in_queue[i][j] or board[i][j] == 0:
-                    continue
-                grid = bfs(i, j)
-                ice_groups.append(grid)
-            
-        return ice_groups
-    
-    def meet_water(ice_groups):
-        water_board = [[0 for _ in range(m)] for _ in range(n)]
+                
+            return ice
         
-        for ice_group in ice_groups:
-            for cr, cc in ice_group:
-                cnt = 0
-                for d in range(4):
-                    nr = cr + dr[d]
-                    nc = cc + dc[d]
-                    if in_range(nr, nc) and board[nr][nc] == 0:
-                        cnt += 1
-                        # print("여기")
-                water_board[cr][cc] = cnt
-        return water_board
+        cnt = 0
+        for r in range(n):
+            for c in range(m):
+                if board[r][c] == 0 or in_queue[r][c]:
+                    continue
+                ice = bfs(r, c)
+                cnt += 1
+                ices.extend(ice)
+                
+        return ices, cnt
     
-    def melt(water_board):
-        for i in range(n):
-            for j in range(m):
-                if board[i][j] > 0:
-                    board[i][j] = max(0, board[i][j] - water_board[i][j])
-                    
-    def one_time():
-        nonlocal ice_groups
-        water_board = meet_water(ice_groups)
-        melt(water_board)
-        ice_groups = find_ice()
-        # 녹은 후 빙하그룹의 수
-        return len(ice_groups)
+    # water의 좌표는 사실 필요하지 않음. 얼음의 좌표에서 4방향을 보면 되기 때문에.
+    def event(ices):
+        event_board = [[0 for _ in range(m)] for _ in range(n)]
+        
+        for r, c in ices:
+            for k in range(4):
+                nr = r + dr[k]
+                nc = c + dc[k]
+                if in_range(nr, nc) and board[nr][nc] == 0:
+                    event_board[r][c] -= 1
+        
+        for r in range(n):
+            for c in range(m):
+                if board[r][c] > 0:
+                    board[r][c] += event_board[r][c]
+                    board[r][c] = max(0, board[r][c])
+                
     
-    
-    time = 0
-    ice_groups = find_ice()
+    t = 0
     while True:
-        time += 1
-        ice_group_cnt = one_time()
-        if ice_group_cnt >= 2:
-            return time
-        # 빙하 그룹이 없다는 것은 분리되지 않았다는 것!!
-        if ice_group_cnt == 0:
+        ices, cnt = find_ice()
+        # print(f"녹기 전 t: {t}")
+        # for row in board:
+        #     print(row)
+        # print("=======")
+        if cnt == 0:
             return 0
-    
-    
+
+        if cnt >= 2:
+            return t
+        
+        event(ices)
+        t += 1   
+        # print(f"녹은 후t: {t}")
+        # for row in board:
+        #     print(row)
+        # print("=======")
+
 print(solution(n, m, board))
