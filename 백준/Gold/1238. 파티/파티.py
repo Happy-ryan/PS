@@ -1,62 +1,55 @@
-import sys
-from heapq import heappop, heappush
+n, m, x = map(int, input().split())
+infos = [list(map(int, input().split())) for _ in range(m)]
 
-input = sys.stdin.readline
+from heapq import heappush, heappop
 
-N,M,X = map(int,input().split())
-adj = [[] for row in range(N+1)] # X > i 돌아갈 때
-radj = [[] for row in range(N+1)] # i > X 도착할 때 역방향으로 생각 i < X
-
-for _ in range(M):
-    a,b,c = map(int,input().split())
-    adj[a].append((b,c)) # (도착점, 비용)
-    radj[b].append((a,c)) 
+def solution(n, m, x, infos):
     
-
-inf = int(1e18)
-
-def dijstrak(S):
-    dist = [inf for col in range(N+1)]
-
-    heap = []
-    heappush(heap,(0,S))
-    dist[S] = 0
-
-    while heap:
-        d,cur = heappop(heap)
-
-        if dist[cur] != d: continue
-
-        for nxt,cost in adj[cur]:
-            if dist[nxt] > d+cost:
-                dist[nxt] = d+cost
-                heappush(heap,(dist[nxt],nxt))
-
-    return dist
-
-def rdijstrak(S):
-    rdist = [inf for col in range(N+1)]
+    # 1. 인접행렬
+    adj = [[] for _ in range(n + 1)]
+    nadj = [[] for _ in range(n + 1)]
     
-    heap = []
-    heappush(heap,(0,S))
-    rdist[S] = 0
-
-    while heap:
-        d,cur = heappop(heap)
-
-        if rdist[cur] != d: continue
-
-        for nxt,cost in radj[cur]:
-            if rdist[nxt] > d+cost:
-                rdist[nxt] = d+cost
-                heappush(heap,(rdist[nxt],nxt))
-
-    return rdist
-
-arr = dijstrak(X)
-brr = rdijstrak(X)
-result = 0
-for i in range(1,N+1):
-    result = max(result,arr[i]+brr[i])
-
-print(result)
+    for info in infos:
+        s, e, c = info
+        adj[s].append((c, e))
+        nadj[e].append((c, s))
+    
+    # 2. 변수
+    inf = int(1e18)
+    
+    # 3. 다익스트라 : 시작점1개 + 도착점 여러개 <-> 현 상황 : 시작점 여러개 + 도착점 1개 (도착점 기준 생각)
+    def dijkstra(start, adj, dist):
+        
+        heap = []
+        
+        heappush(heap, (0, start))
+        dist[start] = 0
+        
+        while heap:
+            cd, cur = heappop(heap)
+            
+            if dist[cur] < cd:
+                continue
+            
+            for cost, nxt in adj[cur]:
+                nd = cd + cost
+                if dist[nxt] <= nd:
+                    continue
+                
+                heappush(heap, (nd, nxt))
+                dist[nxt] = nd
+                
+    # x 시작점(도착점=파티), adj(s(파티) -> e(집)): 파티 -> 집
+    dist = [inf for _ in range(n + 1)]
+    dijkstra(x, adj, dist)
+    # x 시작점(도착점), nadj(e -> s): 집 -> 파티
+    ndist = [inf for _ in range(n + 1)]
+    dijkstra(x, nadj, ndist)
+    
+    res = -inf
+    for i in range(1, n + 1):
+        res = max(res, dist[i] + ndist[i])
+    
+    return res
+        
+print(solution(n, m, x, infos))
