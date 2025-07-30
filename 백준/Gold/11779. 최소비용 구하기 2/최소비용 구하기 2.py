@@ -1,45 +1,64 @@
-import sys
-from heapq import heappop,heappush
-
-input = sys.stdin.readline
-
 n = int(input())
 m = int(input())
-adj = [[] for row in range(n+1)]
-for _ in range(m):
-  a,b,c = map(int,input().split())
-  adj[a].append((b,c))
+infos = [list(map(int, input().split())) for _ in range(m)]
+q = list(map(int, input().split()))
 
-s,e = map(int,input().split())
+from heapq import heappush, heappop
 
-inf = int(1e18)
-dist = [ inf for col in range(n+1) ]
-par = [ 0 for col in range(n+1) ]
+def solution(n, m, infos, q):
+    # 도로간연결 + 거리 최소(최대)비용...다익스트라스러운 느낌..
+    
+    # 1. 인접행렬
+    adj = [[] for _ in range(n + 1)]
+    for s, e, c in infos:
+        adj[s].append((c, e))
+    # par
+    par = [-1 for _ in range(n + 1)]
+    
+    # 2. 변수
+    inf = int(1e18)
+    # 시작 ~ 도착까지의 최소비용
+    dist = [inf for _ in range(n + 1)]
+    
+    # 3. 다익스트라
+    def dijkstra(start, end):
+        
+        heap =  []
+        
+        heappush(heap, (0, start))
+        dist[start] = 0
+        
+        while heap:
+            cd, cur = heappop(heap)
+            
+            if dist[cur] < cd:
+                continue
+            
+            for cost, nxt in adj[cur]:
+                nd = cost + cd
+                if dist[nxt] <= nd:
+                    continue
+            
+                heappush(heap, (nd, nxt))
+                dist[nxt] = nd
+                par[nxt] = cur
+        
+        return dist[end]
+                
+    s, e = q
+    cost = dijkstra(s, e)
+    
+    path = [e]
+    while e != s:
+        p = par[e]
+        path.append(p)
+        e = p
+    
+    path = path[::-1]
+    
+    print(cost)
+    print(len(path))
+    print(*path)
+        
 
-heap = []
-heappush(heap,(0,s))
-dist[s] = 0
-
-while heap:
-  d, cur = heappop(heap)
-
-  if dist[cur] != d: continue
-
-  for nxt, cost in adj[cur]:
-    if dist[nxt] > d + cost:
-      dist[nxt] = d + cost
-      heappush(heap,(dist[nxt],nxt))
-      par[nxt] = cur
-
-print(dist[e])
-# print(par)
-
-path = []
-path.append(e)
-while path[-1] != s:
-  v = par[e]
-  path.append(v)
-  e = v
-print(len(path))
-for x in reversed(path):
-  print(x,end=' ')
+solution(n, m, infos, q)
