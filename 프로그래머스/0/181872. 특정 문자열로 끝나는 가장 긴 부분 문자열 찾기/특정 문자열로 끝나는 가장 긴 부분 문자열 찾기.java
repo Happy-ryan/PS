@@ -11,9 +11,11 @@ class Solution {
             idx++;
         }
         
-        System.out.println(x);
+        int last_idx = myString.lastIndexOf(pat);
         
-        for(int i = 0; i < x + size; i++) {
+        System.out.println(last_idx);
+        
+        for(int i = 0; i < last_idx + size; i++) {
             sb.append(myString.charAt(i));
         }
 
