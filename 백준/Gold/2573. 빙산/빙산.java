@@ -74,7 +74,7 @@ class Solution {
 
     static IceResult findIces() {
         List<int[]> ices = new ArrayList<>();
-        boolean[][] inQueue = new boolean[N][M];
+        boolean[][] inQueue = new boolean[N][M]; // default - false
 
         int cnt = 0;
         for (int i = 0; i < N; i++) {
@@ -94,7 +94,6 @@ class Solution {
     static void event(List<int[]> ices) {
         int[][] eventBoard = new int[N][M];
 
-        // 각 얼음 위치에서 인접한 물의 개수만큼 감소값 누적
         for (int[] pos : ices) {
             int r = pos[0];
             int c = pos[1];
@@ -104,7 +103,7 @@ class Solution {
                 int nc = c + dc[k];
 
                 if (inRange(nr, nc) && board[nr][nc] == 0) {
-                    eventBoard[r][c] -= 1;  // 수정: 얼음 위치에 감소값 누적
+                    eventBoard[r][c] -= 1;
                 }
             }
         }
@@ -112,6 +111,7 @@ class Solution {
         // 실제 보드에 적용
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < M; j++) {
+                // 빙하
                 if (board[i][j] > 0) {
                     board[i][j] += eventBoard[i][j];
                     board[i][j] = Math.max(0, board[i][j]);
