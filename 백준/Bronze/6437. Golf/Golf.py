@@ -1,0 +1,24 @@
+def solution(p, s):
+    diff = p - s
+    if diff == 1:
+        return "Birdie.\n"
+    if diff == -1:
+        return "Bogey.\n"
+    if diff == 2 and s == 1:
+        return "Hole-in-one.\n"
+    if diff == 2:
+        return "Eagle.\n"
+    if diff == 3:
+        return "Double eagle.\n"
+    if diff == 0:
+        return "Par.\n"
+    return "Double Bogey.\n"
+
+cnt = 0
+while True:
+    cnt += 1
+    p, s = map(int, input().split())
+    if p == 0 and s == 0:
+        break
+    print(f"Hole #{cnt}")
+    print(solution(p, s))
