@@ -75,3 +75,22 @@ with tmp as (
 select U.USER_ID, U.NICKNAME, T.TOTAL_SALES
 from tmp as T
 inner join USED_GOODS_USER as U on T.WRITER_ID = U.USER_ID;
+
+
+
+
+# 완료된 중고거래 & '총' (> group by > 매우 주의) 금액 70만원 이상 / 거래액 기준 오름차순
+
+# 1) 완료된 중고거래 추출
+with tmp as (
+    select WRITER_ID, sum(PRICE) as 'TOTAL_SALES'
+    from USED_GOODS_BOARD
+    where STATUS = 'DONE'
+    group by WRITER_ID
+    having TOTAL_SALES >= 700000
+)
+
+select T.WRITER_ID, U.NICKNAME, T.TOTAL_SALES
+from tmp as T
+inner join USED_GOODS_USER as U on T.WRITER_ID = U.USER_ID
+order by TOTAL_SALES asc;
