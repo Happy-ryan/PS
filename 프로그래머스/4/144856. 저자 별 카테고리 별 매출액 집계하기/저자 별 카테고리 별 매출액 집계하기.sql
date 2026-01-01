@@ -42,18 +42,6 @@
 # inner join AUTHOR A on A.AUTHOR_ID = T.AUTHOR_ID
 # order by A.AUTHOR_ID asc, T.CATEGORY desc;
 
-
-
-
-
-
-
-
-
-
-
-
-
 # # 2022년 1월 - 저자별 / 카테고리별 매출액 (판매량 * 판매가)
 # # 저자, 저자명, 카테고리, 매출액
 # # 저자ID 오름차순 / 카테고리별 내림차순
@@ -109,3 +97,16 @@ select T1.author_id, A.author_name, T1.category, T1.total_sales
 from tmp1 as T1
 inner join AUTHOR as A on A.AUTHOR_ID = T1.AUTHOR_ID
 order by AUTHOR_ID asc, CATEGORY desc;
+
+# 2022 1월 저자별 & 카테고리별 매출액
+# 저자id 저자명 카테고리 매출액 
+# 저자id 오름차순 / 카테도리 내림차순
+
+# step 저자 & 카테고리별 ~ 구하기
+select B.author_id, A.AUTHOR_NAME, B.category, sum(B.price * S.sales) as 'TOTAL_SALES'
+from BOOK_SALES as S 
+inner join BOOK as B on S.BOOK_ID = B.BOOK_ID
+inner join AUTHOR as A on A.AUTHOR_ID = B.AUTHOR_ID
+where S.SALES_DATE like '2022-01-%'
+group by B.category, B.author_id
+order by A.AUTHOR_ID asc, CATEGORY desc;
