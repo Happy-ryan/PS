@@ -74,14 +74,16 @@ select *
 from tmp
 order by APNT_YMD asc;
 
-
-
-
-
-
-
-
-
-
-
-
+# 2022 4 13 취소되지 않은 흉부외과(CS) 진료예약 조회
+# 예약일시 기준 오름차순
+select      A.APNT_NO,
+            P.PT_NAME,
+            P.PT_NO,
+            A.MCDP_CD,
+            D.DR_NAME,
+            A.APNT_YMD
+from APPOINTMENT as A
+left join PATIENT as P on A.PT_NO = P.PT_NO
+left join DOCTOR as D on A.MDDR_ID = D.DR_ID
+where A.APNT_YMD like '2022-04-13%' and D.MCDP_CD = 'CS' and A.APNT_CNCL_YN = 'N'
+order by A.APNT_YMD asc;
