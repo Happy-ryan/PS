@@ -130,7 +130,55 @@ with tmp as (
     
 )
 
+# join할 때 최대 가격과 함께 반드시 카테고리도 조인 조건에 넣어야한다
+# 카테고리를 넣지 않으면 가격이 우연히 같았을 때 전혀 다른 카테고리에 서로 매치가 될 수 있기 때문에.
 select P.CATEGORY, T.MAX_PRICE, P.PRODUCT_NAME
 from tmp as T
 inner join FOOD_PRODUCT as P on (P.CATEGORY = T.CATEGORY and P.PRICE = T.max_price)
 order by max_price desc;
+
+# 풀이2) 윈도우함수의 partition by
+with tmp as (
+    select PRODUCT_ID, CATEGORY, PRICE, PRODUCT_NAME,
+           row_number() over (partition by CATEGORY order by price desc) as rn
+    from FOOD_PRODUCT
+    where CATEGORY in ('국', '김치', '식용유', '과자')
+)
+
+select CATEGORY, PRICE, PRODUCT_NAME
+from tmp
+where rn = 1 
+order by PRICE desc;
+
+# 풀이3) group_concat
+with tmp as (
+    select substring_index(group_concat(PRODUCT_ID order by PRICE desc), ',', 1) as PRODUCT_ID,
+           CATEGORY
+    from FOOD_PRODUCT
+    where category in ('식용유', '국', '과자', '김치')
+    group by CATEGORY
+)
+
+select P.CATEGORY, P.PRICE , P.PRODUCT_NAME
+from tmp as T
+inner join FOOD_PRODUCT as P on (T.PRODUCT_ID = P.PRODUCT_ID)
+order by P.price desc;
+
+# 방법1 limit 사용 / 방법2 row_number()사용 /방법3 group_concat 사요
+
+with tmp as (
+    select CATEGORY, max(PRICE) as 'PRICE'
+    from FOOD_PRODUCT
+    where CATEGORY in ('과자', '국', '김치', '식용유')
+    group by CATEGORY 
+)
+
+
+select T.CATEGORY, T.PRICE as 'MAX_PRICE', P.PRODUCT_NAME
+from tmp as T
+inner join FOOD_PRODUCT as P on T.CATEGORY = P.CATEGORY and
+                                T.PRICE = P.PRICE
+order by MAX_PRICE desc;
+
+
+
