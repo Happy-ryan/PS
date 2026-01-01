@@ -1,4 +1,22 @@
 -- 코드를 입력하세요
+# 테이블에서 조회수가 가장 높은 중고거래 게시물에 대한 첨부파일 경로 조회
+# FILE ID 기준 내림차순 / 기본 경로 존재
+
+# step1. 가장 조회수가 많은 게시글 추출
+
+select *
+from USED_GOODS_BOARD;
+
+with tmp4 as (
+    select BOARD_ID,
+        row_number() over (partition by BOARD_ID order by VIEWS desc)
+    from USED_GOODS_BOARD
+)
+
+select *
+from tmp4;
+
+
 # 테이블 2개 > join
 # 조회수가 가장 높은 중고거래 게시물
 # 조회수가 가장 높다 > 서브쿼리절로 추출 or 윈도우함수
