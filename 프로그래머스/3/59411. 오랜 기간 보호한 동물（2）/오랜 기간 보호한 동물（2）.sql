@@ -89,3 +89,18 @@ select ANIMAL_ID, NAME
 from tmp
 where rn = 1 or rn = 2
 order by duration desc;
+
+# 입양을 '간' 동물
+# 방법1. window 함수 
+with tmp as (
+    select  O.ANIMAL_ID, 
+            timestampdiff(day, I.DATETIME, O.DATETIME) as duration,
+            O.NAME,
+            row_number() over (order by timestampdiff(day, I.DATETIME, O.DATETIME) desc) as rn
+    from ANIMAL_OUTS as O
+    left outer join ANIMAL_INS as I on O.ANIMAL_ID = I.ANIMAL_ID
+)
+
+select ANIMAL_ID, NAME
+from tmp as T
+where rn = 1 or rn = 2
