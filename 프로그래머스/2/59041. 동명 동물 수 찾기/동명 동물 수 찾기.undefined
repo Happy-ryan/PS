@@ -1,0 +1,10 @@
+-- 코드를 입력하세요
+# 동물 이름 중 두 번이상 쓰인 이름 & 횟수
+# 이름이 없는 동물 제외
+# 결과는 이름순으로 정렬
+select NAME, count(NAME) as COUNT
+from ANIMAL_INS
+where NAME is not null # null로 우선 삭제
+group by NAME
+having count(NAME) >= 2
+order by NAME;
