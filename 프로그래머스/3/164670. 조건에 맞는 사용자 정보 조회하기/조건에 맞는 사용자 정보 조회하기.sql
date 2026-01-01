@@ -106,23 +106,53 @@
 
 
 # 게시물 3건 이상 등록
+# with tmp as (
+#     select WRITER_ID, count(*) as CNT
+#     from USED_GOODS_BOARD
+#     group by WRITER_ID
+#     having CNT >= 3
+# )
+
+# select U.USER_ID,
+#        U.NICKNAME,
+#        concat(U.CITY, ' ', U.STREET_ADDRESS1, ' ', U.STREET_ADDRESS2) as 전체주소,
+#        concat(
+#             substring(U.TLNO, 1, 3),
+#             '-',
+#             substring(U.TLNO, 4, 4),
+#             '-',
+#             substring(U.TLNO, 8, 4)
+#         ) as 전화번호
+# from tmp as T
+# inner join USED_GOODS_USER as U on U.USER_ID = T.WRITER_ID
+# order by  U.USER_ID desc;
+
+
+# select substring_index('사과, 배, 딸기', ',', 1),
+#        substring('사과, 배, 딸기', 1, 2);
+       
+
+# 게시글 3건 이상 등록한 사용자 -ID 닉네임 전체주소 전화번호 조회
+# 회원ID 기준 내림차순
+
 with tmp as (
-    select WRITER_ID, count(*) as CNT
+    select WRITER_ID, COUNT(WRITER_ID) as CNT
     from USED_GOODS_BOARD
     group by WRITER_ID
     having CNT >= 3
 )
 
-select U.USER_ID,
-       U.NICKNAME,
-       concat(U.CITY, ' ', U.STREET_ADDRESS1, ' ', U.STREET_ADDRESS2) as 전체주소,
-       concat(
-            substring(U.TLNO, 1, 3),
-            '-',
-            substring(U.TLNO, 4, 4),
-            '-',
-            substring(U.TLNO, 8, 4)
-        ) as 전화번호
+select  U.USER_ID,
+        U.NICKNAME,
+        concat(U.CITY, ' ', U.STREET_ADDRESS1, ' ', U.STREET_ADDRESS2) as '전체주소',
+        concat(
+            substring(U.TLNO, 1, 3) ,'-',
+            substring(U.TLNO, 4, 4), '-',
+            substring(U.TLNO, 8, 4) # substring(컬럼, 시작(1base), 개수)
+        ) as '전화번호'
 from tmp as T
-inner join USED_GOODS_USER as U on U.USER_ID = T.WRITER_ID
-order by  U.USER_ID desc;
+inner join USED_GOODS_USER as U
+    on T.WRITER_ID = U.USER_ID
+order by U.USER_ID desc;
+       
+       
