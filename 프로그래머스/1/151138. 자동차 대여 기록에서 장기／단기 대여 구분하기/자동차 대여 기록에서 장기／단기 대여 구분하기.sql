@@ -64,3 +64,16 @@ with tmp as (
 
 select *
 from tmp;
+
+# 대여시작일 2022.09
+# 대여기간 30일이상 장기대여 / 단기대여
+select HISTORY_ID, CAR_ID, 
+        date_format(START_DATE, '%Y-%m-%d'),
+        date_format(END_DATE, '%Y-%m-%d'),
+        case
+            when timestampdiff(day,START_DATE,END_DATE) + 1 >= 30 then '장기 대여'
+            else '단기 대여'
+        end as 'RENT_TYPE'
+from CAR_RENTAL_COMPANY_RENTAL_HISTORY
+where year(START_DATE) = 2022 and month(START_DATE) = 9
+order by HISTORY_ID desc;
