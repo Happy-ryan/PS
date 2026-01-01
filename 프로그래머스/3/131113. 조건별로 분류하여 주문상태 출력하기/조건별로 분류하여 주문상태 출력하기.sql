@@ -37,10 +37,19 @@ order by ORDER_ID asc;
 
 select ORDER_ID, PRODUCT_ID, date_format(OUT_DATE, '%Y-%m-%d') as OUT_DATE,
         case
-            when OUT_DATE is null then '출고미정'
             when timestampdiff(day, '2022-05-01', OUT_DATE) > 0 then '출고대기'
+            when OUT_DATE is null then '출고미정'
             else '출고완료'
         end as 출고여부
 from FOOD_ORDER
 order by ORDER_ID asc;
 
+
+select ORDER_ID, PRODUCT_ID, date_format(OUT_DATE, '%Y-%m-%d') as OUT_DATE,
+    case
+        when timestampdiff(day, '2022-05-01',OUT_DATE) + 1 >= 2 then '출고대기'
+        when OUT_DATE is null then '출고미정'
+        else '출고완료'
+    end as '출고여부'
+from FOOD_ORDER
+order by ORDER_ID asc;
