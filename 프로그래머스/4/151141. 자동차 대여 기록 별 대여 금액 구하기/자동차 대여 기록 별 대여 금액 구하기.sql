@@ -152,6 +152,33 @@ select H.HISTORY_ID, round(((100 - ifnull(P.DISCOUNT_RATE, 0)) * H.TOTAL_FEE) / 
 from history as H
 left join CAR_RENTAL_COMPANY_DISCOUNT_PLAN as P 
     on H.DURATION_TYPE = P.DURATION_TYPE and P.CAR_TYPE = H.CAR_TYPE
-order by FEE desc, H.HISTORY_ID desc
+order by FEE desc, H.HISTORY_ID desc;
 
+# 자동차 종류 = 트럭 / 대여기록별 대여금액 계산
+# 대여기록ID와 대여금액
+# 금액 기준 내림차순 기록ID 내림차순
 
+# step1. 트럭과 대여기록 계산, 하루 빌리는 금액 계산
+with tmp as (
+    select  H.HISTORY_ID,  I.CAR_TYPE,
+            I.DAILY_FEE * (timestampdiff(day,H.START_DATE, H.END_DATE) + 1) as 'TOTAL',
+            timestampdiff(day,H.START_DATE, H.END_DATE) + 1 as 'DATE',
+            I.DAILY_FEE,
+            case
+                when timestampdiff(day,H.START_DATE, H.END_DATE) + 1 < 7 then NULL
+                when timestampdiff(day,H.START_DATE, H.END_DATE) + 1 < 30 then '7일 이상'
+                when timestampdiff(day,H.START_DATE, H.END_DATE) + 1 < 90 then '30일 이상'
+                else '90일 이상'
+            end as 'DURATION_TYPE'
+    from CAR_RENTAL_COMPANY_CAR as I 
+    right outer join CAR_RENTAL_COMPANY_RENTAL_HISTORY as H on I.CAR_ID = H.CAR_ID
+    where I.CAR_TYPE in ('트럭')
+)
+
+# left join했을 때 7미만은 null 상태라서 duration_type이 null 발생. 그런데 null이면 계산 안됨 
+# 따라서 ifnull 활용해서 null이 아니라 0이되도록 
+select  T.HISTORY_ID,
+        round(T.TOTAL * (100 - ifnull(P.DISCOUNT_RATE, 0)) / 100) as 'FEE' 
+from tmp as T
+left join CAR_RENTAL_COMPANY_DISCOUNT_PLAN as P on T.DURATION_TYPE = P.DURATION_TYPE and T.CAR_TYPE = P.CAR_TYPE
+order by FEE desc, T.HISTORY_ID desc;
