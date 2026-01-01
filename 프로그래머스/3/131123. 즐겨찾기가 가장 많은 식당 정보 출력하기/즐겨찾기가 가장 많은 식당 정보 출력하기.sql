@@ -99,3 +99,17 @@ select I.FOOD_TYPE, I.REST_ID, I.REST_NAME, I.FAVORITES
 from tmp as T
 inner join REST_INFO as I on T.REST_ID = I.REST_ID
 order by I.FOOD_TYPE desc;
+
+# 그룹콘캣
+with tmp as (
+    select  FOOD_TYPE,
+            substring_index(group_concat(REST_ID order by FAVORITES desc), ',', 1) as 'REST_ID',
+            substring_index(group_concat(REST_NAME order by FAVORITES desc), ',', 1) as 'REST_NAME',
+            substring_index(group_concat(FAVORITES order by FAVORITES desc), ',', 1) as 'FAVORITES'
+    from REST_INFO
+    group by FOOD_TYPE
+)
+
+select *
+from tmp
+order by FOOD_TYPE desc;
