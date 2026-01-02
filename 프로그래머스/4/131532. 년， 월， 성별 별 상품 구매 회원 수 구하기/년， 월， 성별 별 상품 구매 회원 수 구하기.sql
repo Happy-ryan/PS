@@ -37,22 +37,24 @@ where I.gender is not null
 group by year, month, gender
 order by year, month, gender;
 
+# 년 월 성별별로 상품 구매한 회원수 집계
+# 년 월 성별 기준 오름차순
+# 성별 정보 없는거 제외
+# 구매한 회수(X) -> 구매이력이 있는 회원의 수...
+with tmp as (
+    select  
+            S.USER_ID,
+            I.GENDER,
+            S.SALES_DATE
+    from ONLINE_SALE as S 
+    inner join USER_INFO as I on S.USER_ID = I.USER_ID
+    where I.GENDER is not null
+)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+select  year(SALES_DATE) as 'year',
+        month(SALES_DATE) as 'month',
+        gender,
+        count(distinct USER_ID) as 'USERS'
+from tmp
+group by year(SALES_DATE), month(SALES_DATE), gender
+order by year(SALES_DATE), month(SALES_DATE), gender;
