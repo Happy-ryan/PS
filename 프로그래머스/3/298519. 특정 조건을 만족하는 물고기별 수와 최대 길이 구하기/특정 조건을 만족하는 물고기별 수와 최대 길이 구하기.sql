@@ -26,13 +26,30 @@
 
 # 평균길이 33cm 이상 물고기 종류별로 분류 잡은 수, 최대길이, 물고기 종류 출력
 # 종류 오름차순 / 10cm이하는 10cm로 
+# with tmp as (
+#     select count(ID) as FISH_COUNT, max(LENGTH) as max_length, FISH_TYPE
+#     from FISH_INFO
+#     group by FISH_TYPE
+#     having avg(if(LENGTH <= 10 or LENGTH is null, 10, LENGTH)) >= 33
+# )
+
+# select *
+# from tmp
+# order by FISH_TYPE asc;
+
+# 평균길이 33cm 이상인 물고기들을 종류별로 분류
+# 잡은 수 최대길이 물고기의 종류 출력
+# 물고기 종류에 대해 오름차순
+# 10cm이하는 10cm로 취급하여 평균
 with tmp as (
-    select count(ID) as FISH_COUNT, max(LENGTH) as max_length, FISH_TYPE
+    select FISH_TYPE
     from FISH_INFO
     group by FISH_TYPE
-    having avg(if(LENGTH <= 10 or LENGTH is null, 10, LENGTH)) >= 33
+    having avg(ifnull(LENGTH, 10)) >= 33
 )
 
-select *
-from tmp
-order by FISH_TYPE asc;
+select count(ID) as 'FISH_COUNT', max(LENGTH) as 'MAX_LENGTH', T.FISH_TYPE
+from tmp as T, FISH_INFO as I
+where T.FISH_TYPE = I.FISH_TYPE
+group by T.FISH_TYPE
+order by T.FISH_TYPE;
