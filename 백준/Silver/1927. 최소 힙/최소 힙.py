@@ -1,23 +1,19 @@
-import sys
-from heapq import heappush, heappop
-input = sys.stdin.readline
+from heapq import heappop, heappush
 
-n = int(input())
-min_heap = []
-erased = [0] * n
+N = int(input())
+nums = [int(input()) for _ in range(N)]
 
-def pop(heap):
-    while heap:
-        x, idx = heappop(heap)
-        if erased[idx] == 0:
-            erased[idx] = 1
-            return x, idx
-    return 0, -1 # 힙이 비어있을 때
-
-for i in range(n):
-    num = int(input())
-    if num == 0:
-        x, idx = pop(min_heap)
-        print(x)
-    else:
-        heappush(min_heap, (num, i))
+def solution(N, nums):
+    
+    min_heap = []
+    
+    for num in nums:
+        if num == 0:
+            if not min_heap:
+                print(0)
+            else:
+                print(heappop(min_heap))
+        else:
+            heappush(min_heap, num)
+    
+solution(N, nums)
