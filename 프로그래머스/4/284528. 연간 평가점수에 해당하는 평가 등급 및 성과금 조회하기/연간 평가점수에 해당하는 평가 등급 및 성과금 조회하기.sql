@@ -32,27 +32,59 @@
 # 사번, 성명, 평가등급, 성과금 조회
 # 사번 기준 오름차순
 
-# 1) 각 사원의 점수에 따른 grade 부여
-with tmp1 as (
-    select G.EMP_NO,
-        case 
-            when avg(SCORE) >= 96 then 'S'
-            when avg(SCORE) >= 90 then 'A'
-            when avg(SCORE) >= 80 then 'B'
-            else 'C'
-        end as GRADE
-    from HR_GRADE as G
-    inner join HR_EMPLOYEES as H on G.EMP_NO = H.EMP_NO
-    group by G.EMP_NO
+# # 1) 각 사원의 점수에 따른 grade 부여
+# with tmp1 as (
+#     select G.EMP_NO,
+#         case 
+#             when avg(SCORE) >= 96 then 'S'
+#             when avg(SCORE) >= 90 then 'A'
+#             when avg(SCORE) >= 80 then 'B'
+#             else 'C'
+#         end as GRADE
+#     from HR_GRADE as G
+#     inner join HR_EMPLOYEES as H on G.EMP_NO = H.EMP_NO
+#     group by G.EMP_NO
+# )
+
+# select   T1.EMP_NO, E.EMP_NAME, T1.GRADE,
+#         case
+#             when T1.GRADE = 'S' then E.SAL * 0.2
+#             when T1.GRADE = 'A' then E.SAL * 0.15
+#             when T1.GRADE = 'B' then E.SAL * 0.1
+#             when T1.GRADE = 'C' then E.SAL * 0
+#         end as BONUS
+# from tmp1 as T1
+# inner join HR_EMPLOYEES as E on T1.EMP_NO = E.EMP_NO
+# order by T1.EMP_NO;
+
+
+# 사원별 성과금 조회!!
+# step1. 평균 grade 구하기
+with tmp as (
+    select EMP_NO,  
+            case
+                when avg(SCORE) < 80 then 'C'
+                when avg(SCORE) < 90 then 'B'
+                when avg(SCORE) < 96 then 'A'
+                else 'S' 
+            end as 'GRADE'
+    from HR_GRADE 
+    group by EMP_NO
+), tmp2 as (
+    select  T.EMP_NO,
+            I.EMP_NAME,
+            T.GRADE,
+            # I.SAL,
+            case
+                when T.GRADE = 'S' then I.SAL * 0.2
+                when T.GRADE = 'A' then I.SAL * 0.15
+                when T.GRADE = 'B' then I.SAL * 0.1
+                when T.GRADE = 'C' then I.SAL * 0
+            end as 'BONUS'
+    from tmp as T
+    inner join HR_EMPLOYEES as I on T.EMP_NO = I.EMP_NO
 )
 
-select   T1.EMP_NO, E.EMP_NAME, T1.GRADE,
-        case
-            when T1.GRADE = 'S' then E.SAL * 0.2
-            when T1.GRADE = 'A' then E.SAL * 0.15
-            when T1.GRADE = 'B' then E.SAL * 0.1
-            when T1.GRADE = 'C' then E.SAL * 0
-        end as BONUS
-from tmp1 as T1
-inner join HR_EMPLOYEES as E on T1.EMP_NO = E.EMP_NO
-order by T1.EMP_NO;
+select *
+from tmp2
+order by EMP_NO;
