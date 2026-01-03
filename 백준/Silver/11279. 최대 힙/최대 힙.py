@@ -1,25 +1,20 @@
+from heapq import heappop, heappush
 
-import sys
-from heapq import heappush, heappop
-input = sys.stdin.readline
-# 파이썬 디폴트 : min_heap
-# max_heap은 minus를 활용
-n = int(input())
-max_heap = []
-erased = [0] * n
+N = int(input())
+nums = [int(input()) for _ in range(N)]
 
-def pop(heap):
-    while heap:
-        x, idx = heappop(heap)
-        if erased[idx] == 0:
-            erased[idx] = 1
-            return x, idx
-    return 0, -1
-
-for i in range(n):
-    num = int(input())
-    if num == 0:
-        x, idx = pop(max_heap)
-        print(-x)
-    else:
-        heappush(max_heap, (-num, i))
+def solution(N, nums):
+    
+    min_heap = []
+    max_heap = []
+    
+    for num in nums:
+        if num == 0:
+            if not max_heap:
+                print(0)
+            else:
+                print(-heappop(max_heap))
+        else:
+            heappush(max_heap, -num)
+    
+solution(N, nums)
