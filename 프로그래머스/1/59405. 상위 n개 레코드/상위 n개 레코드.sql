@@ -32,6 +32,7 @@ from
 where T.rn = 1;
 
 
+
 # 상위 n개 찾는 방법 -> 윈도우 함수 or limit 
 # 1) limit
 with tmp1 as
@@ -44,3 +45,19 @@ with tmp1 as
     
 select *
 from tmp1;
+
+
+with tmp1 as (
+    select NAME, row_number() over (order by DATETIME asc) as rn
+    from ANIMAL_INS
+)
+
+select NAME
+from tmp1
+where rn = 1;
+
+# limit / window / group_concat
+select substring_index(group_concat(NAME order by DATETIME asc, '/'), ',', 1) as 'NAME'
+from ANIMAL_INS;
+
+
