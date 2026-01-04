@@ -47,20 +47,24 @@ def solution(N, infos):
                 
             # # deadline이 선택된 컵라면 수(문제 푼 회수 = 시간)보다 크면 먹으면 된다.
             # # 뒤에 더 좋은 케이스가 나오면 아까 먹은 컵라면 중에서 최소로 먹은 것은 제외하는게 좋음.
-            # # 먹기 전에 판단을 함.
-            # if deadline >= len(selected):
-            #     selected.append(cup)
-            # else:
-            #     # 확인하자...
+            # 먹기 전에 판단을 함.
+            if deadline > len(selected):
+                heappush(selected, cup)
+            else:
+                # 확인하자...
+                min_cup = selected[0]
+                if min_cup < cup:
+                    heappop(selected)
+                    heappush(selected, cup)
                 
             #     # cnt += cup
             #     print(f"selected: {selected}, deadline: {deadline}, cup: {cup}, cnt: {cnt}")
             #     # cur_time += 1
-            heappush(selected, cup)  # 일단 무조건 먹기
+            # heappush(selected, cup)  # 일단 무조건 먹기
             
-            if len(selected) > deadline: # 내가 하나를 먹어서 데드라인보다 커지는 경우
-                                        # 그러므로 금방 먹은것까지해서 최소 컵라면을 지우면 최적
-                heappop(selected)  # 최소값 토해내기
+            # if len(selected) > deadline: # 내가 하나를 먹어서 데드라인보다 커지는 경우
+            #                             # 그러므로 금방 먹은것까지해서 최소 컵라면을 지우면 최적
+            #     heappop(selected)  # 최소값 토해내기
                 
         return sum(selected)
     
