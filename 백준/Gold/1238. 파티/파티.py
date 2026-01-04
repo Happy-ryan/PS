@@ -1,29 +1,27 @@
-n, m, x = map(int, input().split())
-infos = [list(map(int, input().split())) for _ in range(m)]
+N, M, X = map(int, input().split())
+edges = [list(map(int, input().split())) for _ in range(M)]
 
 from heapq import heappush, heappop
 
-def solution(n, m, x, infos):
+def solution(N, M, X, edges):
+    # 단방향 / 오고가는가는데 가장 오래 걸리는 학생
     
-    # 1. 인접행렬
-    adj = [[] for _ in range(n + 1)]
-    nadj = [[] for _ in range(n + 1)]
+    adj = [[] for _ in range(N + 1)]
+    radj = [[] for _ in range(N + 1)]
     
-    for info in infos:
-        s, e, c = info
-        adj[s].append((c, e))
-        nadj[e].append((c, s))
+    for u, v, t in edges:
+        adj[u].append((t, v)) # 최단거리로 가야하기때문에 최소 시간 구해야함.
+        radj[v].append((t, u)) # 양방향처럼 되어버렸음.. <- 이거 쓰면 안돼!
     
-    # 2. 변수
     inf = int(1e18)
     
-    # 3. 다익스트라 : 시작점1개 + 도착점 여러개 <-> 현 상황 : 시작점 여러개 + 도착점 1개 (도착점 기준 생각)
+    
     def dijkstra(start, adj, dist):
         
         heap = []
         
-        heappush(heap, (0, start))
         dist[start] = 0
+        heappush(heap, (0, start))
         
         while heap:
             cd, cur = heappop(heap)
@@ -31,25 +29,23 @@ def solution(n, m, x, infos):
             if dist[cur] < cd:
                 continue
             
-            for cost, nxt in adj[cur]:
-                nd = cd + cost
-                if dist[nxt] <= nd:
-                    continue
-                
-                heappush(heap, (nd, nxt))
-                dist[nxt] = nd
-                
-    # x 시작점(도착점=파티), adj(s(파티) -> e(집)): 파티 -> 집
-    dist = [inf for _ in range(n + 1)]
-    dijkstra(x, adj, dist)
-    # x 시작점(도착점), nadj(e -> s): 집 -> 파티
-    ndist = [inf for _ in range(n + 1)]
-    dijkstra(x, nadj, ndist)
+            for nd, nxt in adj[cur]:
+                if dist[nxt] > cd + nd:
+                    dist[nxt] = cd + nd
+                    heappush(heap, (dist[nxt], nxt))
+    # (rdist)시작점1개 + 도착점 여러개 <-> (dist)현 상황 : 시작점 여러개 + 도착점 1개 (도착점 기준 생각)
+    # 집에서 파티장 갈 때 : 도착점1개에서 -> 여러집(시작점)으로 가는 최소 비용 
+    # 파티절에서 집 갈 때 : 시작점1개 -> 여러집(도착점)
+    answer = 0
+    dist = [inf for _ in range(N + 1)]
+    dijkstra(X, adj, dist) 
+    rdist = [inf for _ in range(N + 1)]
+    dijkstra(X, radj, rdist)
     
     res = -inf
-    for i in range(1, n + 1):
-        res = max(res, dist[i] + ndist[i])
+    for i in range(1, N + 1):
+        res = max(res, dist[i] + rdist[i])
     
     return res
-        
-print(solution(n, m, x, infos))
+
+print(solution(N, M, X, edges))
