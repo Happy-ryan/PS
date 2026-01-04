@@ -1,41 +1,43 @@
-n, m = map(int, input().split())
-start = int(input())
-adj = [[] for _ in range(n + 1)]
-for _ in range(m):
-    u, v, w = map(int, input().split())
-    adj[u].append((w, v))
+V, E = map(int, input().split())
+K = int(input())
+edges = [list(map(int, input().split())) for _ in range(E)]
+# u -> v 가중치 w
+
+from heapq import heappop, heappush
+
+def solution(V, E, K, edges):
+    adj = [[] for _ in range(V + 1)]
+
+    for edge in edges:
+        u, v, w = edge
+        adj[u].append((w, v)) # (가중치, 노드)
     
-from heapq import heappush, heappop
-    
-def solution(n, m, start, adj):
     inf = int(1e18)
+    visited = [inf for _ in range(V + 1)]
     
-    visited = [inf for _ in range(n + 1)]
-    
-    def di(start):
+    def dijsktra(start):
         
         heap = []
-        visited[start] = 0
         heappush(heap, (0, start))
-        
+        visited[start] = 0
+
         while heap:
-            d, cur = heappop(heap)
-            
-            if d > visited[cur]:
-                continue
-            
-            for nd, nxt in adj[cur]:
-                if visited[nxt] > nd + d:
-                    visited[nxt] = nd +d
-                    heappush(heap, (nd + d, nxt))
+            cd, cur = heappop(heap)
         
-    di(start)
+            if cd > visited[cur]: # 현재비용이 이미 방문했던 비용보다 크면 볼 필요 없음.
+                continue
+                
+            for nd, nxt in adj[cur]:
+                if visited[nxt] > nd + cd: # 방문할 곳의 비용이 cd + nd보다 커야 최적화 의미 존재. > 최소화 시키는 것
+                    visited[nxt] = nd + cd
+                    heappush(heap, (nd + cd, nxt))
+                    
+    dijsktra(K)
     
-    for i in range(1, n + 1):
-        if visited[i] == inf:
+    for i in range(1, V + 1):
+        if visited[i] >= inf:
             print('INF')
         else:
             print(visited[i])
     
-
-solution(n, m, start, adj)
+solution(V, E, K, edges)
