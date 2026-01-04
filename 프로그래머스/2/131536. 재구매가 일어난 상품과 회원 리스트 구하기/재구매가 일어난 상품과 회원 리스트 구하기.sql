@@ -61,3 +61,10 @@ from ONLINE_SALE
 group by USER_ID, PRODUCT_ID
 having count(PRODUCT_ID) > 1
 order by USER_ID asc, PRODUCT_ID desc;
+
+# 재구매 > 또 한 번 구매..구매이력 2번
+select USER_ID, PRODUCT_ID
+from ONLINE_SALE
+group by USER_ID, PRODUCT_ID
+having count(ONLINE_SALE_ID) > 1
+order by USER_ID asc, PRODUCT_ID desc;
