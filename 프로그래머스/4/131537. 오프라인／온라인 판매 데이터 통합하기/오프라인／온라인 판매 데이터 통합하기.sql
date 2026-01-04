@@ -3,6 +3,8 @@
 # 오파라인 판매데이터의 경우 userid = null
 # 판매일 기준 오름차순 / 상푸id 오름차순 / 유저id 오름차순
 # 온라인과 오프라인 테이블을 합치는 것이 포인트...
+# select / from / join on / where / group by / having / order by
+
 with tmp_union as (
     select date_format(SALES_DATE, '%Y-%m-%d') as SALES_DATE,
             PRODUCT_ID,
@@ -10,7 +12,7 @@ with tmp_union as (
             sum(SALES_AMOUNT) as SALES_AMOUNT
     from ONLINE_SALE
     where year(SALES_DATE) = 2022 and month(SALES_DATE) = 3
-    group by PRODUCT_ID
+    group by SALES_DATE, PRODUCT_ID, USER_ID
     
     union all
     
@@ -20,7 +22,7 @@ with tmp_union as (
             sum(SALES_AMOUNT) as SALES_AMOUNT
     from OFFLINE_SALE
     where year(SALES_DATE) = 2022 and month(SALES_DATE) = 3
-    group by PRODUCT_ID
+    group by SALES_DATE, PRODUCT_ID, USER_ID
 )
 
 select *
@@ -85,7 +87,10 @@ order by SALES_DATE asc, PRODUCT_ID	 asc, USER_ID asc;
 # 판매일 asc, 상품ID asc, 유저ID asc
 
 # 온 + 오프라인 테이블 합침 > intersect / union / union all
-select date_format(SALES_DATE, '%Y-%m-%d') as SALES_DATE, PRODUCT_ID, USER_ID, SALES_AMOUNT
+select date_format(SALES_DATE, '%Y-%m-%d') as SALES_DATE,
+        PRODUCT_ID,
+        USER_ID,
+        SALES_AMOUNT
 from ONLINE_SALE
 where year(SALES_DATE) = 2022 and month(SALES_DATE) = 3
 
@@ -96,3 +101,25 @@ from OFFLINE_SALE
 where year(SALES_DATE) = 2022 and month(SALES_DATE) = 3
 
 order by SALES_DATE asc, PRODUCT_ID	 asc, USER_ID asc;
+
+# 2022년 3월 온 + 오프라인 결합 > union > 컬럼이 정확하게 동일해야함.
+# # 오프라인의 user_id는 null
+
+# select date_format(SALES_DATE, '%Y-%m-%d') as 'SALES_DATE',
+#         PRODUCT_ID,
+#         USER_ID,
+#         SALES_AMOUNT
+# from ONLINE_SALE
+# where date_format(SALES_DATE, '%Y-%m') = '2022-03'
+
+# union all
+
+# select  date_format(SALES_DATE, '%Y-%m-%d') as 'SALES_DATE',
+#         PRODUCT_ID,
+#         'NULL' as 'USER_ID',
+#         SALES_AMOUNT
+# from OFFLINE_SALE
+# where date_format(SALES_DATE, '%Y-%m') = '2022-03'
+
+# order by SALES_DATE asc, PRODUCT_ID	 asc, USER_ID asc;
+
