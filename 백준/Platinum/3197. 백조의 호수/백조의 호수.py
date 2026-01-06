@@ -1,44 +1,56 @@
-import sys
-input = sys.stdin.readline
+# bfs - 출발점이 여러개인 bfs
+# union find - 2차원에서의 union find
 
-R, C = map(int, input().split())
-board = [list(input()) for _ in range(R)]
+from collections import deque
 
-from collections import defaultdict, deque
-
-def solution2(R, C, board):
+def solution(R, C, board):
     
+    
+    # 0. 백조의 위치 찾기
     def find_swan():
         swans = []
-        for r in range(R):
-            for c in range(C):
-                if board[r][c] == "L":
-                    swans.append((r, c, 's'))
+        for i in range(R):
+            for j in range(C):
+                if board[i][j] == 'L':
+                    swans.append((i, j))
         return swans
     
     swans = find_swan()
-    s1, s2 = swans[0], swans[1]
+    
+    # 1. 물의 위치 찾기
+    def find_water():
+        waters = []
+        for i in range(R):
+            for j in range(C):
+                if board[i][j] == 'X': # 빙하 아니면 모두 물(백조 포함)
+                        continue
+                waters.append((i, j))
+        return waters
+    
+    waters = find_water()
+    
+    # 2. BFS -> 빙하 공간 녹이기 (By 물) -> 녹는 날을 기록!
+    inf = int(1e18)
     
     dr = [-1, 1, 0, 0]
     dc = [0, 0, -1, 1]
 
+    in_queue = [[False for _ in range(C)] for _ in range(R)]
+    day = [[inf for _ in range(C)] for _ in range(R)] # 얼음이 녹는 날 기록
+    
     def in_range(r, c):
         return 0 <= r < R and 0 <= c < C
-    
-    inf = int(1e18)
-    
-    in_queue = [[False for _ in range(C)] for _ in range(R)]
-    dist = [[inf for _ in range(C)] for _ in range(R)]
     
     def bfs(waters):
         
         dq = deque([])
+        
         for water in waters:
             r, c = water
             dq.append((r, c))
             in_queue[r][c] = True
-            dist[r][c] = 0
-        
+            day[r][c] = 0 
+            
         while dq:
             cr, cc = dq.popleft()
             for k in range(4):
@@ -46,47 +58,37 @@ def solution2(R, C, board):
                 nc = cc + dc[k]
                 if in_range(nr, nc) and\
                     not in_queue[nr][nc] and\
-                        board[nr][nc] == 'X':
-                            
+                        board[nr][nc] == 'X': # 'X' -> '.'로 녹여야하므로,
                             dq.append((nr, nc))
                             in_queue[nr][nc] = True
-                            dist[nr][nc] = dist[cr][cc] + 1
-        
-        return waters
-                            
-    
-    waters = []
-    for i in range(R):
-        for j in range(C):
-            if board[i][j] == 'X':
-                continue
-            waters.append((i, j))
+                            day[nr][nc] = day[cr][cc] + 1
     
     bfs(waters)
     
-    # for row in dist:
-    #     print(*row)
+    # 3. 녹는 날 - 좌표 모아주기 > 해당 좌표들의 조합으로 그룹 생성할 것!
+    from collections import defaultdict
+    
     dic = defaultdict(list)
     for i in range(R):
         for j in range(C):
-            dic[dist[i][j]].append((i, j))
+            dic[day[i][j]].append((i, j))
     
-    max_day = max(dic.keys())
+    # 4. 백조가 같은 물 그룹(?)에 위치하는지 판단 > union find 활용
+    # 2차원 union find 
     
-    def index(r, c):
-        return r * C + c
-    
+    # 2차원 -> 1차월 배열로 index
+    def index(i, j):
+        return i * C + j
+    # 셋팅
     N = R * C
-    par = [-1] * (N)
+    par = [-1 for _ in range(N)]
     
     def find(x):
         if par[x] == -1:
             return x
         
-        root = find(par[x])
-        par[x] = root
-        
-        return root
+        par[x] = find(par[x])
+        return par[x]
     
     def union(x, y):
         x, y = find(x), find(y)
@@ -94,20 +96,29 @@ def solution2(R, C, board):
         if x == y:
             return False
         
+        if x > y:
+            x, y = y, x
+            
         par[y] = x
+        
         return True
     
-    for day in range(max_day + 1):
-        for r, c in dic[day]:
+    # 얼음이 다 녹는 날
+    max_day = max(dic.keys())
+    # 0일 ~ max_day까지 돌면서 주어진 day 보다 작은 경우 그룹으로 병합
+    # 병합하면서 두 백조의 par가 같아지면 같은 그룹에 편입 의미 > return
+    for cday in range(max_day + 1):
+        for r, c in dic[cday]: # day에 녹는 좌표들
             for k in range(4):
                 nr = r + dr[k]
                 nc = c + dc[k]
                 if in_range(nr, nc) and\
-                    dist[nr][nc] <= day:
+                    day[nr][nc] <= cday: # day보다 작으면 다 내 그룹이 되야해!!
                         union(index(r, c), index(nr, nc))
-        # print(f"day : {day}")
-        # print(f"par : {par}")
-        if find(index(s1[0], s1[1])) == find(index(s2[0], s2[1])):
-            return day
-    
-print(solution2(R, C, board))
+                        
+        if find(index(swans[0][0], swans[0][1])) == find(index(swans[1][0], swans[1][1])):
+            return cday
+
+R, C = map(int, input().split())
+board = [list(input()) for _ in range(R)]
+print(solution(R, C, board))
