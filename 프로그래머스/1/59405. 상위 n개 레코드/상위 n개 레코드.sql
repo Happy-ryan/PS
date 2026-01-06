@@ -57,7 +57,16 @@ from tmp1
 where rn = 1;
 
 # limit / window / group_concat
-select substring_index(group_concat(NAME order by DATETIME asc, '/'), ',', 1) as 'NAME'
+select substring_index(group_concat(NAME order by DATETIME asc, '/'), ',', 1) as 'NAME',
+        group_concat(NAME separator '/ ')
 from ANIMAL_INS;
 
+with tmp as (
+    select name, row_number() over (order by DATETIME asc) as rn
+    from ANIMAL_INS
+    
+)
 
+select name
+from tmp
+where rn = 1;
