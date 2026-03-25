@@ -52,7 +52,13 @@ def solution(n, m, board):
                         dist[nd][nr][nc] = dist[cd][cr][cc] + 1 # 벽이 뚫리지 않은 세계관에서 벽이 뚫린거니까 cd에서 nd로 처리
                         
     bfs(0, 0, 0)
-
+    
+    # for row in dist[0]:
+    #     print(row)
+    # print("-")
+    # for row in dist[1]:
+    #     print(row)
+    # print("-")
     ans = inf
     for i in range(2):
         ans = min(ans, dist[i][n - 1][m - 1])
