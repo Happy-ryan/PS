@@ -1,59 +1,64 @@
 n, m = map(int, input().split())
-board = [list(input()) for _ in range(n)]
+board = [list(map(int, input())) for _ in range(n)]
 
 from collections import deque
 
-def solution(n, m , board):
+def solution(n, m, board):
+    
     inf = int(1e18)
     
     dr = [-1, 1, 0, 0]
     dc = [0, 0, -1, 1]
     
-    # 벽 부수는 차원 추가 (0 : 정상 / 1 : 부숨)
-    in_queue = [[[False for _ in range(m)] for _ in range(n)] for _ in range(2)]
+    def in_range(r, c, d):
+        return 0 <= r < n and 0 <= c < m and 0 <= d < 2
+    
+    queue = [[[False for _ in range(m)] for _ in range(n)] for _ in range(2)]
     dist = [[[inf for _ in range(m)] for _ in range(n)] for _ in range(2)]
     
-    def in_range(k, r, c):
-        return 0 <= r < n and 0 <= c < m and 0 <= k <= 1
-    
-    def bfs(k, r, c):
-        
+    def bfs(r, c, d):
         dq = deque([])
         
-        dq.append((k, r, c))
-        in_queue[k][r][c] = True
-        dist[k][r][c] = 1 
-
-        while dq:
-            ck, cr, cc = dq.popleft()
-            for dir in range(4):
-                nr = cr + dr[dir]
-                nc = cc + dc[dir]
-                if in_range(ck, nr, nc) and\
-                    not in_queue[ck][nr][nc] and\
-                        board[nr][nc] == '0': # 벽이 아닐 때 이동 가능
-                            dq.append((ck, nr, nc))
-                            in_queue[ck][nr][nc] = True
-                            dist[ck][nr][nc] = dist[ck][cr][cc] + 1
-            # 벽 부수는 차원
-            nk = ck + 1
-            for dir in range(4):
-                nr = cr + dr[dir]
-                nc = cc + dc[dir]
-                if in_range(nk, nr, nc) and\
-                    not in_queue[nk][nr][nc] and\
-                        board[nr][nc] == '1': # 벽일 때 박살내고 이동가능
-                            dq.append((nk, nr, nc))
-                            in_queue[nk][nr][nc] = True
-                            dist[nk][nr][nc] = dist[ck][cr][cc] + 1
-                            
-    
-    bfs(0, 0, 0)
+        dq.append((r, c, d))
+        queue[d][r][c] = True
+        dist[d][r][c] = 1
         
-    min_dist = min(dist[0][n - 1][m - 1], dist[1][n - 1][m - 1])
-    
-    answer = -1 if min_dist >= inf else min_dist
-    
-    return answer
+        while dq:
+            cr, cc, cd = dq.popleft()
             
+            for k in range(4):
+                nr = cr + dr[k]
+                nc = cc + dc[k] 
+                if in_range(nr, nc, cd) and\
+                    board[nr][nc] == 0 and\
+                    not queue[cd][nr][nc]:
+                        
+                        dq.append((nr, nc, cd))
+                        queue[cd][nr][nc] = True
+                        dist[cd][nr][nc] = dist[cd][cr][cc] + 1
+                        
+            # 1은 벽 뚫은 세계관
+            nd = cd + 1 # cd = 0
+
+            for k in range(4):
+                nr = cr + dr[k]
+                nc = cc + dc[k] 
+                if in_range(nr, nc, nd) and\
+                    board[nr][nc] == 1 and\
+                    not queue[nd][nr][nc]:
+                        
+                        dq.append((nr, nc, nd))
+                        queue[nd][nr][nc] = True
+                        dist[nd][nr][nc] = dist[cd][cr][cc] + 1 # 벽이 뚫리지 않은 세계관에서 벽이 뚫린거니까 cd에서 nd로 처리
+                        
+    bfs(0, 0, 0)
+
+    ans = inf
+    for i in range(2):
+        ans = min(ans, dist[i][n - 1][m - 1])
+        
+    if ans >= inf:
+        return -1
+    return ans
+
 print(solution(n, m, board))
