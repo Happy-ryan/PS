@@ -1,64 +1,59 @@
 n = int(input())
 m = int(input())
-infos = [list(map(int, input().split())) for _ in range(m)]
-q = list(map(int, input().split()))
+edges = [list(map(int, input().split())) for _ in range(m)]
+s, e = map(int, input().split())
 
-from heapq import heappush, heappop
-
-def solution(n, m, infos, q):
-    # 도로간연결 + 거리 최소(최대)비용...다익스트라스러운 느낌..
-    
-    # 1. 인접행렬
+def solution(n, m, edges, s, e):
     adj = [[] for _ in range(n + 1)]
-    for s, e, c in infos:
-        adj[s].append((c, e))
-    # par
-    par = [-1 for _ in range(n + 1)]
-    
-    # 2. 변수
-    inf = int(1e18)
-    # 시작 ~ 도착까지의 최소비용
-    dist = [inf for _ in range(n + 1)]
-    
-    # 3. 다익스트라
-    def dijkstra(start, end):
+    for u, v, c in edges:
+        adj[u].append((c, v)) # 비용, 도착점
         
-        heap =  []
+    
+    from heapq import heappop, heappush
+    
+    # 최소비용
+    inf = int(1e19)
+    
+    def dijkstra(s, e):
         
-        heappush(heap, (0, start))
-        dist[start] = 0
+        heap = []
+        dist = [inf for _ in range(n + 1)]
+        par = [-1 for _ in range(n + 1)]
+        
+        dist[s] = 0 # 최소비용의 시작은 0
+        heappush(heap, (0, s)) # 비용, 지점
+        par[s] = 0
         
         while heap:
             cd, cur = heappop(heap)
             
-            if dist[cur] < cd:
+            if dist[cur] < cd: # 이동 손해
                 continue
             
             for cost, nxt in adj[cur]:
                 nd = cost + cd
-                if dist[nxt] <= nd:
-                    continue
-            
-                heappush(heap, (nd, nxt))
-                dist[nxt] = nd
-                par[nxt] = cur
-        
-        return dist[end]
                 
-    s, e = q
-    cost = dijkstra(s, e)
-    
-    path = [e]
-    while e != s:
-        p = par[e]
-        path.append(p)
-        e = p
-    
-    path = path[::-1]
-    
-    print(cost)
-    print(len(path))
-    print(*path)
+                if dist[nxt] > nd: # 현재 nxt까지 이동했을 때 기록된 비용 > New 비용 > 이동 이득 
+                    dist[nxt] = nd
+                    heappush(heap, (nd, nxt))
+                    par[nxt] = cur
+                    
+                    
+        min_cost = dist[e]
+        path = []
         
-
-solution(n, m, infos, q)
+        idx = e
+        while True:
+            path.append(idx)
+            if par[idx] == 0:
+                break
+            idx = par[idx]
+            
+        print(min_cost)
+        print(len(path))
+        print(*path[::-1])
+                    
+    
+    dijkstra(s, e)
+        
+solution(n, m, edges, s, e)
