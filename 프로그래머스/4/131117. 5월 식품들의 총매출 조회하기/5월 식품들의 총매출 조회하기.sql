@@ -48,3 +48,11 @@ select T.PRODUCT_ID, P.PRODUCT_NAME, T.TOTAL_AMOUNT * P.PRICE as TOTAL_SALES
 from temp T
 inner join FOOD_PRODUCT P on T.PRODUCT_ID = P.PRODUCT_ID
 order by TOTAL_SALES desc, T.PRODUCT_ID asc;
+
+# 생산일자 2022년 5월 / 식품ID, 식품이름, 총매출 <- 총매출 기준 내림차순
+# order 테이블을 살려야함
+select O.PRODUCT_ID, P.PRODUCT_NAME, sum(O.AMOUNT) * P.PRICE as TOTAL_SALES
+from FOOD_ORDER as O inner join FOOD_PRODUCT as P on O.PRODUCT_ID = P.PRODUCT_ID
+where year(PRODUCE_DATE) = 2022 and month(PRODUCE_DATE) = 5
+group by PRODUCT_ID, PRODUCT_NAME
+order by TOTAL_SALES desc, O.PRODUCT_ID asc;;
