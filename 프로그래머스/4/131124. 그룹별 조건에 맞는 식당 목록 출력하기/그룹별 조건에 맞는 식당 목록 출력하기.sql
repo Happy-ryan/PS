@@ -36,7 +36,28 @@ inner join temp T on P.MEMBER_ID = T.MEMBER_ID
 order by R.REVIEW_DATE asc, R.REVIEW_TEXT asc;
 
 
+# 리뷰를 가장 많이 작성한 회원
+# 리뷰 작성일 기준 오름차순, 리뷰 텍스트 기준 오름차순
+# id 중복이 된다!!
+with temp as (
+    select  row_number() over (order by sum(REVIEW_SCORE) desc) as rn,
+            MEMBER_ID
+    from REST_REVIEW
+)
 
+select *
+from temp;
 
-
-
+# row_number() over (partition by order by)
+# 리뷰를 가장 많이 작성하 
+with tmp as (
+select P.MEMBER_NAME, P.MEMBER_ID, sum(R.REVIEW_SCORE) 
+from MEMBER_PROFILE as P inner join REST_REVIEW as R on P.MEMBER_ID = R.MEMBER_ID
+group by P.MEMBER_ID
+order by sum(R.REVIEW_SCORE) desc
+limit 1
+)
+    
+select T.MEMBER_NAME, R.REVIEW_TEXT, date_format(R.REVIEW_DATE, '%Y-%m-%d') as REVIEW_DATE
+from tmp as T inner join REST_REVIEW as R on T.MEMBER_ID = R.MEMBER_ID
+order by R.REVIEW_DATE asc, R.REVIEW_TEXT asc;
