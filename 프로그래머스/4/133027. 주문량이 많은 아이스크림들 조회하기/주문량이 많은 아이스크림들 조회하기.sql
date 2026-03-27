@@ -127,3 +127,26 @@ from tmp
 group by flavor
 order by sum(TOTAL_ORDER) desc
 limit 3;
+
+
+# 7월의 아이스크림 총 주문량 + 상반기의 아이스크림 총 주문량 = 상위 3개의 맛
+# 7월의 경우 아이스크림이 다른 출하번호(기본키) 가짐 -> 같은 맛이라도 분리되어있을 수 있음
+# 상반기의 경우 맛이 기본키
+
+with tmp as (
+    select FLAVOR, sum(TOTAL_ORDER) as TOTAL_ORDER
+    from JULY
+    group by FLAVOR
+    
+    union all
+    
+    select FLAVOR, sum(TOTAL_ORDER) as TOTAL_ORDER
+    from FIRST_HALF
+    group by FLAVOR
+)
+
+select FLAVOR
+from tmp
+group by FLAVOR
+order by sum(TOTAL_ORDER) desc 
+limit 3;
