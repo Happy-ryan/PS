@@ -61,3 +61,16 @@ limit 1
 select T.MEMBER_NAME, R.REVIEW_TEXT, date_format(R.REVIEW_DATE, '%Y-%m-%d') as REVIEW_DATE
 from tmp as T inner join REST_REVIEW as R on T.MEMBER_ID = R.MEMBER_ID
 order by R.REVIEW_DATE asc, R.REVIEW_TEXT asc;
+
+with tmp as (
+    select MEMBER_ID, 
+        row_number() over (order by sum(REVIEW_SCORE) desc) as rn
+    from REST_REVIEW
+    GROUP BY MEMBER_ID # row_number() 에는 반드시 필요
+)
+
+select P.MEMBER_NAME, R.REVIEW_TEXT, date_format(R.REVIEW_DATE, '%Y-%m-%d') as REVIEW_DATE
+from tmp as T inner join REST_REVIEW as R on T.MEMBER_ID = R.MEMBER_ID
+              inner join  MEMBER_PROFILE as P on T.MEMBER_ID = P.MEMBER_ID
+where T.rn = 1
+order by R.REVIEW_DATE asc, R.REVIEW_TEXT asc;
