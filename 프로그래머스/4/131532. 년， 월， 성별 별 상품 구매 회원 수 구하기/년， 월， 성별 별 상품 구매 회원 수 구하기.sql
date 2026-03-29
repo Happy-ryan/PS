@@ -41,6 +41,7 @@ order by year, month, gender;
 # 년 월 성별 기준 오름차순
 # 성별 정보 없는거 제외
 # 구매한 회수(X) -> 구매이력이 있는 회원의 수...
+# 구매횟수인지..구매한 이력이 있는 회원의 수인지...정확하게 구분해야한다.!!!!
 with tmp as (
     select  
             S.USER_ID,
@@ -58,3 +59,12 @@ select  year(SALES_DATE) as 'year',
 from tmp
 group by year(SALES_DATE), month(SALES_DATE), gender
 order by year(SALES_DATE), month(SALES_DATE), gender;
+
+
+# 년/월/성별로 상품을 '구매'한 회원수 집계
+# 년/월/성별기준 오름차순 > 구매횟수(x) 구매회원(<- 중복발생가능성 높지)
+select year(S.SALES_DATE), month(S.SALES_DATE), I.GENDER, count(distinct S.USER_ID)
+from USER_INFO as I inner join ONLINE_SALE as S on I.USER_ID = S.USER_ID
+where I.GENDER is not null
+group by year(S.SALES_DATE), month(S.SALES_DATE), I.GENDER
+order by year(S.SALES_DATE), month(S.SALES_DATE), I.GENDER;
