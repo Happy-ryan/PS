@@ -122,3 +122,37 @@ with temp as (
 select T.HOUR, ifnull(P.COUNT, 0) as COUNT
 from temp T
 left join temp2 P on T.HOUR = P.HOUR;
+
+# ----------------
+SET @hour = 0;
+
+with recursive time as (
+    select @hour as hour
+    
+    union all
+    
+    select hour + 1
+    from time
+    where hour < 23
+)
+
+select *
+from time;
+
+set @hour = 0;
+
+with recursive tmp as (
+    select @hour as t
+    
+    union all
+    
+    select t + 1
+    from tmp
+    where t < 23
+)
+
+
+select tmp.t, count(O.ANIMAL_ID)
+from tmp left join ANIMAL_OUTS as O on tmp.t = hour(O.DATETIME)
+group by tmp.t
+order by tmp.t asc;
