@@ -60,31 +60,51 @@
 
 # 사원별 성과금 조회!!
 # step1. 평균 grade 구하기
-with tmp as (
-    select EMP_NO,  
-            case
-                when avg(SCORE) < 80 then 'C'
-                when avg(SCORE) < 90 then 'B'
-                when avg(SCORE) < 96 then 'A'
-                else 'S' 
-            end as 'GRADE'
-    from HR_GRADE 
-    group by EMP_NO
-), tmp2 as (
-    select  T.EMP_NO,
-            I.EMP_NAME,
-            T.GRADE,
-            # I.SAL,
-            case
-                when T.GRADE = 'S' then I.SAL * 0.2
-                when T.GRADE = 'A' then I.SAL * 0.15
-                when T.GRADE = 'B' then I.SAL * 0.1
-                when T.GRADE = 'C' then I.SAL * 0
-            end as 'BONUS'
-    from tmp as T
-    inner join HR_EMPLOYEES as I on T.EMP_NO = I.EMP_NO
-)
+# with tmp as (
+#     select EMP_NO,  
+#             case
+#                 when avg(SCORE) < 80 then 'C'
+#                 when avg(SCORE) < 90 then 'B'
+#                 when avg(SCORE) < 96 then 'A'
+#                 else 'S' 
+#             end as 'GRADE'
+#     from HR_GRADE 
+#     group by EMP_NO
+# ), tmp2 as (
+#     select  T.EMP_NO,
+#             I.EMP_NAME,
+#             T.GRADE,
+#             # I.SAL,
+#             case
+#                 when T.GRADE = 'S' then I.SAL * 0.2
+#                 when T.GRADE = 'A' then I.SAL * 0.15
+#                 when T.GRADE = 'B' then I.SAL * 0.1
+#                 when T.GRADE = 'C' then I.SAL * 0
+#             end as 'BONUS'
+#     from tmp as T
+#     inner join HR_EMPLOYEES as I on T.EMP_NO = I.EMP_NO
+# )
 
-select *
-from tmp2
-order by EMP_NO;
+# select *
+# from tmp2
+# order by EMP_NO;
+
+
+# 예시를 잘 보면 1반기 2반기 평가가 각각 존재함을 반드시 눈치채야함,
+select E.EMP_NO, E.EMP_NAME, 
+            case 
+                when avg(G.SCORE) >= 96 then 'S'
+                when avg(G.SCORE) >= 90 then 'A'
+                when avg(G.SCORE) >= 80 then 'B'
+                else 'C'
+            end as GRADE,
+            case
+                when avg(G.SCORE) >= 96 then E.SAL * 0.2
+                when avg(G.SCORE) >= 90 then E.SAL * 0.15
+                when avg(G.SCORE) >= 80 then E.SAL * 0.1
+                else E.SAL * 0
+            end as BONUS
+from HR_EMPLOYEES as E 
+    inner join HR_GRADE as G on E.EMP_NO = G.EMP_NO
+group by E.EMP_NO, E.EMP_NAME
+order by E.EMP_NO;
