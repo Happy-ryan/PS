@@ -79,3 +79,28 @@ select M.year, M.month, M.purchased_users,
         round(M.purchased_users / T.total, 1) as PUCHASED_RATIO
 from member as M, total as T
 order by M.year asc, M.month asc;
+
+
+# 2021년 가입한 회원 중 > 상품 구매한 회원 수와 상품을 구매한 회원의비율
+# 년, 월별로 출력 / 소수점 두번제자리에서 반올림 / 년 기준 오름차순 / 월 기준 오름차순
+
+# 1) user_info 와 onelin_sale을 inner join 하여 회원의 가입날짜 결합
+# > 2021년 가입날짜 / 2021년 구매이력 where
+
+with total_user as (
+    select count(USER_ID) as TotalUser
+    from USER_INFO
+where year(JOINED) = '2021'
+), buy as (
+    select year(SALES_DATE), month(SALES_DATE), count(distinct S.USER_ID) as PURCHASED_USERS,
+            round(count(distinct S.USER_ID) / T.TotalUser, 1)
+    from USER_INFO as I inner join ONLINE_SALE as S on I.USER_ID = S.USER_ID,
+        total_user as T
+    where year(I.JOINED) = 2021
+    group by year(SALES_DATE), month(SALES_DATE)
+)
+
+
+
+select *
+from buy;
