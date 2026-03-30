@@ -1,36 +1,34 @@
 n, m = map(int, input().split())
-arr = list(map(int,input().split()))
+Hs = list(map(int, input().split()))
 
-def solution(n, m, arr):
-    # 정렬해도 무관
-    arr.sort()
-    inf = int(1e18)
+def solution(n, m, Hs):
     
-    def cutting(h):
-        cnt = 0
-        for i in arr:
-            if i >= h:
-                cnt += (i - h)
-        return cnt
+    # H의 정렬이 영향을 주지 아니함.
+    Hs.sort()
     
-    # 높이의 최대값
-    # h 15 7개
-    # 왼쪽 True 
-    # h가 x 변수 / cutting 개수 y
-    def binary_search(target):
-        l, r = 0, inf
-        ans = inf
-        while l <= r:
-            m = (l + r) // 2
-            # 7의 왼쪽이 정답! > cutting시 target보다 큰값 중 가장 작은값의 최대값 구하기
-            if cutting(m) >= target:
-                l = m + 1
-                ans = m
-            else:
-                r = m - 1
-                
-        return ans
+    #10 15 17 20
+    def cal(h):
+        val = 0
+        for H in Hs:
+            val += max((H - h), 0)
+        return val
     
-    return binary_search(m)
-
-print(solution(n, m, arr))
+    # h            14 15 | 16
+    #              10  7 | 5
+    #               T  T | F
+    # print(cal(15))
+    
+    # 정답 영역 : l <= 여기에 부호
+    # 정답 영역 l 이므로 출력은 r
+    l, r = 0, 2000000000 + 1
+    while l <= r:
+        mid = (l + r) // 2
+        if m > cal(mid): # mid를 줄여서 더 가져야함.
+            r = mid - 1
+        else:
+            l = mid + 1
+            
+    return r 
+    
+            
+print(solution(n, m, Hs))
