@@ -1,47 +1,46 @@
-n, m = map(int, input().split())
-edges = [list(map(int, input().split())) for _ in range(m)]
+N, M = map(int, input().split())
+edges = [list(map(int, input().split())) for _ in range(M)]
 A, B = map(int, input().split())
 
-def solution(n, m, edges, A, B):
+# 다익스트라 - max heap
+from heapq import heappush, heappop
+
+def solution(N, M, edges, A, B):
     
-    # union find
-    inf = int(1e18)
-    par = [-1 for _ in range(n + 1)]
-    weight = [inf for _ in range(n + 1)] # 다리 옮길 수 있는 최대 무게 중 최소 무게..
-    # root 뱉어내는 함수
-    def find(x):
-        # x가 root -> 끝
-        if par[x] == -1:
-            return x
-        # x 가 root 아님 -> par[x]의 root 필요
-        par[x] = find(par[x])
-        return par[x]
-    # y -> x (root에 가깝도록) - 작은 놈이 root에 가깝도록
-    def union(x, y, w):
-        x, y = find(x), find(y)
-        if x == y:
-            return False
-        
-        if x > y: x, y = y, x
-        par[y] = x
-        weight[x] = min(weight[x], w) # 최대 중량 중 최소
-        return True
-        
-    
-    # union - 중량이 큰 것(최대)부터 결합하고 그 중 최소 
-    edges.sort(key=lambda x : -x[2])
+    # 인접행렬
+    adj = [[] for _ in range(N + 1)]
     for u, v, w in edges:
-        # print(f"결합 전: {par}")
-        union(u, v, w) # 결합순서가 영향을 줌..> 정렬이 필요함!!!
-        # print(f"결합 후: {par}")
-        # print('-')
-        # 결합 완료 > 종료를 안시키면 최대 무게가 아니라 최소 무게로 갱신될 것.
-        if find(A) == find(B):
-            break
-        
+        adj[u].append((w, v)) # 무게, 노드
+        adj[v].append((w, u)) 
     
-    return weight[find(B)]
+    # 옮길 수 있는 중량의 최대값..
+    inf = int(1e18)
+    weights = [-inf for _ in range(N + 1)] # 최대무게니까 -inf
+    def dijkstra(A, B):
         
+        heap = []
+        weights[A] = inf
+        heappush(heap, (-inf, A)) # 무게 노드 > max_heap 이라서 -inf
+        
+        while heap:
+            cw, cur = heappop(heap)
+            cw = -cw # max_heap (양수로 돌리기)
+            
+            if weights[cur] > cw: # weight[cur]보다 작은건 의미 없음.
+                continue
+            
+            for w, nxt in adj[cur]:
+                nw = min(cw, w) # 경로 상 최소 무게가 새로운 문제가 됨.
+                if weights[nxt] < nw:
+                    weights[nxt] = nw
+                    heappush(heap, (-nw, nxt))
+                    
+        return weights
+        
+    dijkstra(A, B)
     
-        
-print(solution(n, m, edges, A, B))
+    
+    return weights[B]
+
+
+print(solution(N, M, edges, A, B))
