@@ -1,32 +1,28 @@
 T = int(input())
 
-def solution(N, edges):
+def solution(F, friends):
     
-    dic = {}
-    num = 1
-    for i in range(N):
-        a, b = edges[i]
-        if a not in dic:
-            dic[a] = num
-            num += 1
-        if b not in dic:
-            dic[b] = num
-            num += 1
+    idx = 1
+    check = {}
+    for friend in friends:
+        # print(friend)
+        f1, f2 = friend
+        if f1 not in check:
+            check[f1] = idx
+            idx += 1
+        if f2 not in check:
+            check[f2] = idx
+            idx += 1
     
-    # print(dic)
-    k = len(dic)
-    par = [-1] * (k + 1)
-    sizes = [1] * (k + 1)
-        
+    par = [-1 for _ in range(len(check.keys()) + 1)]
+    sizes = [1 for _ in range(len(check.keys()) + 1)]
+    
     def find(x):
-        
         if par[x] == -1:
             return x
         
-        root = find(par[x])
-        par[x] = root
-        
-        return root
+        par[x] = find(par[x])
+        return par[x]
     
     def union(x, y):
         x, y = find(x), find(y)
@@ -34,26 +30,22 @@ def solution(N, edges):
         if x == y:
             return False
         
-        if sizes[x] < sizes[y]:
-            x, y = y, x
+        if y > x : x, y = y, x
         
-        par[y] = x
+        par[y] = x # 큰 놈이 부모
         sizes[x] += sizes[y]
-        
         return True
+
     
-    for edge in edges:
-        x, y = dic[edge[0]], dic[edge[1]]
-        union(x, y)
-        
-        par_x = find(x)
-        
-        # print(f"par: {par}")
-        # print(f"sizes : {sizes}")
-        # print(f"정답 : {sizes[par_x]}")
-        print(sizes[par_x])
-        
+    for friend in friends:
+        p1 = check[friend[0]]
+        p2 = check[friend[1]]
+        union(p1, p2)
+        # print(par)
+        # print(sizes)
+        print(sizes[find(p1)])
+
 for _ in range(T):
-    N = int(input())
-    edges = [list(input().split()) for _ in range(N)]
-    solution(N, edges)
+    F = int(input())
+    friends = [list(input().split()) for _ in range(F)]
+    solution(F, friends)
